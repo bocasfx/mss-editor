@@ -12,7 +12,12 @@ function App() {
         <Notes multiline={false} top={65} left={425} width={351} height={92} />
         <Notes multiline top={200} left={121} width={953} height={125} />
         <Knob />
-        {/* <PatchBay /> */}
+        <PatchBay 
+          top={608}
+          left={950}
+          width={130}
+          height={347}
+        />
       </div>
     </div>
   );
