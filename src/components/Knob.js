@@ -1,10 +1,10 @@
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import "./Knob.css";
 
 const MAX_ANGLE = 290;
 const DEFAULT_KNOB_SIZE = 80;
 
-const Knob = ({ size = DEFAULT_KNOB_SIZE }) => {
+const Knob = ({ mini, label, size }) => {
   const [angle, setAngle] = useState(290);
   const [dragging, setDragging] = useState(false);
   const [value, setValue] = useState(0);
@@ -51,12 +51,14 @@ const Knob = ({ size = DEFAULT_KNOB_SIZE }) => {
     [setDragging]
   );
 
+  const knobSize = useMemo(() => size || DEFAULT_KNOB_SIZE, [size]);
+
   return (
     <div
       style={{
         transform: "rotate(" + angle + "deg)",
-        width: `${size}px`,
-        height: `${size}px`,
+        width: `${knobSize}px`,
+        height: `${knobSize}px`,
       }}
       className="knob-container"
       onMouseDown={onMouseDown}

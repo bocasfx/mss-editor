@@ -1,7 +1,6 @@
-import React from "react";
 import "./App.css";
 import mssPatchBlack from "./assets/mss-patch-black.svg";
-import Knob from "./components/Knob.tsx";
+import Knob from "./components/Knob";
 
 function App() {
   return (
