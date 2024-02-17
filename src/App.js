@@ -1,5 +1,7 @@
 import "./App.css";
 import mssPatchBlack from "./assets/mss-patch-black.svg";
+import Knob from "./components/Knob2";
+import Test from "./components/Test";
 
 function App() {
   return (
@@ -11,6 +13,7 @@ function App() {
             <input type="text" />
           </div>
         </header>
+        <Knob />
       </div>
     </div>
   );
