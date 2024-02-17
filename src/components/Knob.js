@@ -1,145 +1,73 @@
-import React from 'react';
-import './Knob.css';
-import PropTypes from 'prop-types';
+import { useCallback, useMemo, useState } from "react";
+import "./Knob.css";
 
-const _angle = 290;
+const MAX_ANGLE = 290;
+const DEFAULT_KNOB_SIZE = 80;
 
-class Knob extends React.Component {
+const Knob = ({ mini, label, size }) => {
+  const [angle, setAngle] = useState(290);
+  const [dragging, setDragging] = useState(false);
+  const [value, setValue] = useState(0);
 
-  static propTypes = {
-    app: PropTypes.object,
-    precision: PropTypes.number,
-    value: PropTypes.number,
-    log: PropTypes.bool,
-    max: PropTypes.number,
-    toFixed: PropTypes.func,
-    disabled: PropTypes.bool,
-    onChange: PropTypes.func,
-    mini: PropTypes.bool,
-    type: PropTypes.string,
-    label: PropTypes.string,
-  }
+  const onMouseDown = useCallback(
+    (event) => {
+      event.preventDefault();
+      event.target.requestPointerLock();
+      setDragging(true);
+    },
+    [setDragging]
+  );
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      dragging: false,
-      angle: _angle,
-      y: null,
-      value: 0,
-    };
+  const onMouseMove = useCallback(
+    (event) => {
+      event.preventDefault();
+      if (!dragging || !event.movementY) {
+        return;
+      }
 
-    this.precision = props.precision !== undefined ? props.precision : 2;
+      let newAngle = angle - event.movementY;
+      newAngle = newAngle >= 2 * MAX_ANGLE ? 2 * MAX_ANGLE : newAngle;
+      newAngle = newAngle <= MAX_ANGLE ? MAX_ANGLE : newAngle;
 
-    this.onMouseDown = this.onMouseDown.bind(this);
-    this.onMouseMove = this.onMouseMove.bind(this);
-    this.onMouseUp = this.onMouseUp.bind(this);
-  }
+      let newValue = (newAngle - MAX_ANGLE) / MAX_ANGLE;
 
-  componentDidMount() {
-    let value = this.props.value;
-    if (this.props.log) {
-      value = Math.log(Math.E * value - value + 1);
-    }
-    let angle = (value * _angle / this.props.max) + _angle;
-    this.setState({
-      value: parseFloat(value.toFixed(this.precision)),
-      angle,
-    });
-  }
+      newValue *= 100;
+      newValue = parseFloat(value.toFixed(1));
 
-  componentWillReceiveProps(nextProps) {
-    let value = nextProps.value;
-    if (this.props.log) {
-      value = Math.log(Math.E * value - value + 1);
-    }
-    let angle = (value * _angle / nextProps.max) + _angle;
-    this.setState({
-      value: parseFloat(value.toFixed(this.precision)),
-      angle,
-    });
-  }
+      setAngle(newAngle);
+      setValue(newValue);
+    },
+    [dragging, angle, value]
+  );
 
-  onMouseDown(event) {
-    if (this.props.disabled) {
-      return;
-    }
-    event.preventDefault();
-    event.target.requestPointerLock();
-    this.setState({
-      dragging: true,
-      y: event.pageY,
-    });
-    window.onmousemove = this.onMouseMove.bind(this);
-    window.onmouseup = this.onMouseUp.bind(this);
-  }
+  const onMouseUp = useCallback(
+    (event) => {
+      event.preventDefault();
+      setDragging(false);
+      window.onmousemove = null;
+      window.onmouseup = null;
+      document.exitPointerLock();
+    },
+    [setDragging]
+  );
 
-  onMouseMove(event) {
-    event.preventDefault();
-    if (!this.state.dragging || !event.movementY) {
-      return;
-    }
+  const knobSize = useMemo(() => size || DEFAULT_KNOB_SIZE, [size]);
 
-    let angle = this.state.angle - event.movementY;
-    angle = angle >= 2 * _angle ? 2 * _angle : angle;
-    angle = angle <= _angle ? _angle : angle;
-
-    let value = (angle - _angle) / _angle;
-
-    if (this.props.log) {
-      value = (Math.exp(value) - 1) / (Math.E - 1);
-    }
-
-    value *= this.props.max;
-    value = parseFloat(value.toFixed(this.precision));
-
-    this.setState({
-      angle,
-      y: event.pageY,
-      value,
-    });
-
-    this.props.onChange(parseFloat(value));
-  }
-
-  onMouseUp(event) {
-    event.preventDefault();
-    this.setState({ dragging: false });
-    window.onmousemove = null;
-    window.onmouseup = null;
-    document.exitPointerLock();
-  }
-
-  ignoreMouseDown(event) {
-    event.preventDefault();
-    event.stopPropagation();
-  }
-
-  render() {
-    let dotStyle = {
-      transform: 'rotate(' + this.state.angle + 'deg)',
-      color: '#FF0000',
-    };
-
-    if (this.state.value === 0) {
-      dotStyle.color = '#FFFF00';
-    }
-
-    let disabled = this.props.disabled;
-
-    let classPrefix = this.props.mini ? 'mini-' : '';
-
-    return (
-      <div className="knob-container" disabled={disabled}>
-        <div className={classPrefix + 'knob-outer'}>
-          <img className={classPrefix + 'knob-marks'} src="./icons/control-panel/knob/marks.svg" alt="./icons/control-panel/knob/marks.svg" onMouseDown={this.ignoreMouseDown}/>
-          <div className={classPrefix + 'knob-dot'} style={dotStyle} onMouseDown={this.onMouseDown} onMouseMove={this.onMouseMove} onMouseUp={this.onMouseUp}>&middot;</div>
-          <div className={classPrefix + 'knob-dial'}></div>
-        </div>
-        <div className={classPrefix + 'knob-label'}>{this.props.label}</div>
-      </div>
-    );
-  }
-}
+  return (
+    <div
+      style={{
+        transform: "rotate(" + angle + "deg)",
+        width: `${knobSize}px`,
+        height: `${knobSize}px`,
+      }}
+      className="knob-container"
+      onMouseDown={onMouseDown}
+      onMouseMove={onMouseMove}
+      onMouseUp={onMouseUp}
+    >
+      <span className="knob-dot"></span>
+    </div>
+  );
+};
 
 export default Knob;
