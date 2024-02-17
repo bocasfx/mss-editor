@@ -1,10 +1,9 @@
 .knob-container {
-  display: flex;
-  align-items: center;
   user-select: none;
   position: absolute;
-  top: 625px;
-  left: 130px;
+  top: 610px;
+  left: 127px;
+  line-height: 0;
 }
 
 .knob-dot {

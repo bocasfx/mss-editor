@@ -5,14 +5,14 @@
 .mss-container {
   width: 1200px;
   height: 2013px;
-  border: 1px solid red;
-  background-color: white;
+  background-color: black;
   background-size: auto 100%;
   background-repeat: no-repeat;
   background-position: left top;
-  margin: 15px auto;
+  margin: 0 auto;
   padding: 0;
   background-color: black;
+  position: relative;
 }
 
 .mss-patch-black {
@@ -22,12 +22,5 @@
   padding: 0;
   opacity: 0.5;
   pointer-events: none;
-}
-
-.mss-header {
-  color: white;
   position: absolute;
-  top: 100px;
-  left: 794px;
-  width: 330px;
 }
