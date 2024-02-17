@@ -1,23 +1,17 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import mssPatchBlack from "./assets/mss-patch-black.svg";
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className="mss-container">
+        <img src={mssPatchBlack} className="mss-patch-black" alt="logo" />
+        <header className="mss-header">
+          <div className="dark">
+            <input type="text" />
+          </div>
+        </header>
+      </div>
     </div>
   );
 }
