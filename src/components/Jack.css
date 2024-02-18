@@ -1,0 +1,16 @@
+.jack {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: white;
+  border-width: 5px;
+  border-style: solid;
+}
+
+.in {
+  border-color: red;
+}
+
+.out {
+  border-color: green;
+}
