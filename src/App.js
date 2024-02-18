@@ -11,13 +11,13 @@ function App() {
         <img src={mssPatchBlack} className="mss-patch-black" alt="logo" />
         <Notes multiline={false} top={65} left={425} width={351} height={92} />
         <Notes multiline top={200} left={121} width={953} height={125} />
-        <Knob />
         <PatchBay 
-          top={608}
-          left={950}
-          width={130}
-          height={347}
+          top={609}
+          left={906}
+          width={175}
+          height={1257}
         />
+        <Knob />
       </div>
     </div>
   );

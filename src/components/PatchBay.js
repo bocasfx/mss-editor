@@ -70,14 +70,14 @@ const PatchBay = ({ width, height, top, left }) => {
     });
   };
 
-  const renderJacks = () => {
+  const renderJacks = (count) => {
     const jacks = [];
-    for (let i = 0; i < 24; i++) {
+    for (let i = 0; i < count; i++) {
       const type = i % 2 === 0 ? "in" : "out";
       jacks.push(<Jack type={type} key={i} onMouseDown={onMouseDown} />);
     }
     return jacks;
-  }
+  };
 
   return (
     <div
@@ -93,7 +93,9 @@ const PatchBay = ({ width, height, top, left }) => {
       onMouseUp={onMouseUp}
     >
       <div className="svg-container">
-        { renderJacks() }
+        <div className="dfam-jacks">{renderJacks(24)}</div>
+        <div className="mother32-jacks">{renderJacks(32)}</div>
+        <div className="subharmonicon-jacks">{renderJacks(32)}</div>
         <svg className="svg" ref={svgRef}>
           {renderPatchCords()}
         </svg>
