@@ -1,6 +1,7 @@
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import "./PatchBay.css";
 import { Jack } from "./Jack";
+import { transformCoords } from "../utils";
 
 const PatchBay = ({ width, height, top, left }) => {
   const [dragging, setDragging] = useState(false);
@@ -12,18 +13,21 @@ const PatchBay = ({ width, height, top, left }) => {
     y2: 0,
   });
 
+  const svgRef = useRef(null);
+
   const onMouseDown = useCallback(
     (event) => {
       event.stopPropagation();
+      const { x, y } = transformCoords(svgRef, event.clientX, event.clientY);
       setDragging(true);
       setCurrentCoord({
-        x1: event.clientX - left - 100,
-        y1: event.clientY - top,
-        x2: event.clientX - left - 100,
-        y2: event.clientY - top,
+        x1: x,
+        y1: y,
+        x2: x,
+        y2: y,
       });
     },
-    [setDragging, top, left]
+    [setDragging]
   );
 
   const onMouseUp = useCallback(
@@ -39,15 +43,15 @@ const PatchBay = ({ width, height, top, left }) => {
     (event) => {
       event.stopPropagation();
       if (dragging) {
-        console.log(event.clientX - left, event.clientY - top);
+        const { x, y } = transformCoords(svgRef, event.clientX, event.clientY);
         setCurrentCoord({
           ...currentCoord,
-          x2: event.clientX - left - 100,
-          y2: event.clientY - top,
+          x2: x,
+          y2: y,
         });
       }
     },
-    [dragging, left, top, currentCoord]
+    [dragging, currentCoord]
   );
 
   const renderPatchCords = () => {
@@ -82,9 +86,8 @@ const PatchBay = ({ width, height, top, left }) => {
       <div className="svg-container">
         <Jack type="in" coords={coords} onMouseDown={onMouseDown} />
         <Jack type="out" coords={coords} onMouseDown={onMouseDown} />
-        <svg className="svg">
+        <svg className="svg" ref={svgRef}>
           {renderPatchCords()}
-          <rect x="0" y="0" width="100" height="100" />
         </svg>
       </div>
     </div>
