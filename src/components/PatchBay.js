@@ -70,6 +70,15 @@ const PatchBay = ({ width, height, top, left }) => {
     });
   };
 
+  const renderJacks = () => {
+    const jacks = [];
+    for (let i = 0; i < 24; i++) {
+      const type = i % 2 === 0 ? "in" : "out";
+      jacks.push(<Jack type={type} key={i} onMouseDown={onMouseDown} />);
+    }
+    return jacks;
+  }
+
   return (
     <div
       className="patch-bay-container"
@@ -84,8 +93,7 @@ const PatchBay = ({ width, height, top, left }) => {
       onMouseUp={onMouseUp}
     >
       <div className="svg-container">
-        <Jack type="in" coords={coords} onMouseDown={onMouseDown} />
-        <Jack type="out" coords={coords} onMouseDown={onMouseDown} />
+        { renderJacks() }
         <svg className="svg" ref={svgRef}>
           {renderPatchCords()}
         </svg>
