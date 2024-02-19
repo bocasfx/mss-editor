@@ -2,6 +2,7 @@
   user-select: none;
   position: absolute;
   line-height: 0;
+  /* border: 1px solid yellow; */
 }
 
 .indicator {

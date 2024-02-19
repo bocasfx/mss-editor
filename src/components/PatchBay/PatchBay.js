@@ -1,7 +1,7 @@
 import { useCallback, useRef, useState } from "react";
 import "./PatchBay.css";
-import { Jack } from "./Jack";
-import { transformCoords } from "../utils";
+import { Jack } from "../common";
+import { transformCoords } from "../../utils";
 
 const PatchBay = ({ width, height, top, left }) => {
   const [dragging, setDragging] = useState(false);

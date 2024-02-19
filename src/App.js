@@ -1,10 +1,9 @@
 import { useState } from "react";
 import "./App.css";
 import mssPatchBlack from "./assets/mss-patch-black.svg";
-import Knob from "./components/Knob";
-import { Notes } from "./components/Notes";
-import { PatchBay } from "./components/PatchBay";
+import { Notes, PatchBay } from "./components";
 import { saveFile } from "./utils/file";
+import { DFAM, Mother32, Subharmonicon } from "./components/synths";
 
 const defaultPatch = {
   name: "MSS Patch",
@@ -44,8 +43,9 @@ function App() {
         <Notes multiline={false} top={65} left={425} width={351} height={92} />
         <Notes multiline top={200} left={121} width={953} height={125} />
         <PatchBay top={615} left={911} width={173} height={1241} />
-        <Knob top={610} left={867} size={80} type="dot" />
-        <Knob top={832} left={891} size={30} type="line" />
+        <DFAM />
+        <Mother32 />
+        <Subharmonicon />
       </div>
     </div>
   );

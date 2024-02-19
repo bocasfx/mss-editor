@@ -73,4 +73,4 @@ const Knob = ({ top, left, size, type }) => {
   );
 };
 
-export default Knob;
+export { Knob };
