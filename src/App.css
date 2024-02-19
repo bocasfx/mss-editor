@@ -2,7 +2,11 @@
   text-align: center;
 }
 
-.mss-container {
+.App .download-button {
+  color: #6f6b65;
+}
+
+.App .mss-container {
   width: 1200px;
   height: 2013px;
   background-color: black;
@@ -15,7 +19,7 @@
   position: relative;
 }
 
-.mss-patch-black {
+.App .mss-patch-black {
   width: 100%;
   height: 100%;
   margin: 0;
