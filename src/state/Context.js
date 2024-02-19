@@ -7,13 +7,24 @@ const DispatchContext = createContext(null);
 
 const handleDownload = (patch) => {
   saveFile(patch, "patch.json");
-  return patch;
+  return { ...patch };
 };
+
+const handleUpdate = (patch, action) => {
+  const { id, value } = action;
+  const newPatch = { ...patch };
+  const [section, element] = id.split(".");
+  newPatch[section] = { ...newPatch[section], [element]: value };
+  return newPatch;
+}
 
 const patchReducer = (patch, action) => {
   switch (action.type) {
     case "download": {
       return handleDownload(patch);
+    }
+    case "update": {
+      return handleUpdate(patch, action);
     }
     default: {
       throw Error("Unknown action: " + action.type);

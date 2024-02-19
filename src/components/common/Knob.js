@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import "./Knob.css";
+import { usePatchDispatch } from "../../state/Context";
 
 const MAX_ANGLE = 150;
 const MIN_ANGLE = -150;
@@ -9,6 +10,7 @@ const Knob = ({ top, left, size, type, id }) => {
   const [angle, setAngle] = useState(MIN_ANGLE);
   const [dragging, setDragging] = useState(false);
   const [value, setValue] = useState(0);
+  const dispatch = usePatchDispatch();
 
   const onMouseDown = useCallback(
     (event) => {
@@ -45,8 +47,13 @@ const Knob = ({ top, left, size, type, id }) => {
       event.preventDefault();
       setDragging(false);
       document.exitPointerLock();
+      dispatch({
+        type: "update",
+        id: id,
+        value: { value, angle },
+      });
     },
-    [setDragging]
+    [angle, dispatch, id, value, setDragging]
   );
 
   const knobSize = useMemo(() => size || DEFAULT_KNOB_SIZE, [size]);
