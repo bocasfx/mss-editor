@@ -4,7 +4,7 @@ import "./Knob.css";
 const MAX_ANGLE = 290;
 const DEFAULT_KNOB_SIZE = 80;
 
-const Knob = ({ mini, label, size }) => {
+const Knob = ({ top, left, size }) => {
   const [angle, setAngle] = useState(290);
   const [dragging, setDragging] = useState(false);
   const [value, setValue] = useState(0);
@@ -59,6 +59,8 @@ const Knob = ({ mini, label, size }) => {
         transform: "rotate(" + angle + "deg)",
         width: `${knobSize}px`,
         height: `${knobSize}px`,
+        top: `${top}px`,
+        left: `${left}px`,
       }}
       className="knob-container"
       onMouseDown={onMouseDown}

@@ -1,8 +1,6 @@
 .knob-container {
   user-select: none;
   position: absolute;
-  top: 610px;
-  left: 867px;
   line-height: 0;
 }
 

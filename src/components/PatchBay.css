@@ -2,7 +2,6 @@
   width: 100%;
   height: 100%;
   position: absolute;
-  border: 1px solid yellow;
 }
 
 .svg-container {
@@ -13,38 +12,35 @@
 
 .dfam-jacks {
   position: absolute;
-  top: 0;
-  left: 45px;
+  top: 2px;
+  left: 47px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(8, 1fr);
-  grid-column-gap: 23px;
-  grid-row-gap: 23px;
-  padding: 10px;
+  grid-column-gap: 19px;
+  grid-row-gap: 18.4px;
 }
 
 .mother32-jacks {
   position: absolute;
-  top: 450px;
-  left: 4px;
+  top: 452px;
+  left: 6px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(8, 1fr);
-  grid-column-gap: 23px;
-  grid-row-gap: 23px;
-  padding: 10px;
+  grid-column-gap: 18.7px;
+  grid-row-gap: 18.5px;
 }
 
 .subharmonicon-jacks {
   position: absolute;
-  top: 905px;
-  left: 8px;
+  top: 907px;
+  left: 11px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(8, 1fr);
-  grid-column-gap: 23px;
-  grid-row-gap: 23px;
-  padding: 10px;
+  grid-column-gap: 19px;
+  grid-row-gap: 18.8px;
 }
 
 .svg {
