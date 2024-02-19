@@ -1,11 +1,12 @@
 import { useCallback, useMemo, useState } from "react";
 import "./Knob.css";
 
-const MAX_ANGLE = 290;
+const MAX_ANGLE = 150;
+const MIN_ANGLE = -150;
 const DEFAULT_KNOB_SIZE = 80;
 
 const Knob = ({ top, left, size }) => {
-  const [angle, setAngle] = useState(290);
+  const [angle, setAngle] = useState(MIN_ANGLE);
   const [dragging, setDragging] = useState(false);
   const [value, setValue] = useState(0);
 
@@ -26,26 +27,23 @@ const Knob = ({ top, left, size }) => {
       }
 
       let newAngle = angle - event.movementY;
-      newAngle = newAngle >= 2 * MAX_ANGLE ? 2 * MAX_ANGLE : newAngle;
-      newAngle = newAngle <= MAX_ANGLE ? MAX_ANGLE : newAngle;
+      newAngle = newAngle >= MAX_ANGLE ? MAX_ANGLE : newAngle;
+      newAngle = newAngle <= MIN_ANGLE ? MIN_ANGLE : newAngle;
 
-      let newValue = (newAngle - MAX_ANGLE) / MAX_ANGLE;
-
-      newValue *= 100;
-      newValue = parseFloat(value.toFixed(1));
+      const newValue = Math.round(
+        ((newAngle - MIN_ANGLE) / (MAX_ANGLE - MIN_ANGLE)) * 100
+      );
 
       setAngle(newAngle);
       setValue(newValue);
     },
-    [dragging, angle, value]
+    [dragging, angle]
   );
 
   const onMouseUp = useCallback(
     (event) => {
       event.preventDefault();
       setDragging(false);
-      window.onmousemove = null;
-      window.onmouseup = null;
       document.exitPointerLock();
     },
     [setDragging]
