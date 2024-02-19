@@ -5,7 +5,7 @@ const MAX_ANGLE = 150;
 const MIN_ANGLE = -150;
 const DEFAULT_KNOB_SIZE = 80;
 
-const Knob = ({ top, left, size, type }) => {
+const Knob = ({ top, left, size, type, id }) => {
   const [angle, setAngle] = useState(MIN_ANGLE);
   const [dragging, setDragging] = useState(false);
   const [value, setValue] = useState(0);
