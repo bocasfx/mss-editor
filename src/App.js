@@ -44,8 +44,8 @@ function App() {
         <Notes multiline={false} top={65} left={425} width={351} height={92} />
         <Notes multiline top={200} left={121} width={953} height={125} />
         <PatchBay top={615} left={911} width={173} height={1241} />
-        <Knob top={610} left={867} size={80} />
-        <Knob top={832} left={891} size={30} />
+        <Knob top={610} left={867} size={80} type="dot" />
+        <Knob top={832} left={891} size={30} type="line" />
       </div>
     </div>
   );

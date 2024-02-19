@@ -5,7 +5,7 @@ const MAX_ANGLE = 150;
 const MIN_ANGLE = -150;
 const DEFAULT_KNOB_SIZE = 80;
 
-const Knob = ({ top, left, size }) => {
+const Knob = ({ top, left, size, type }) => {
   const [angle, setAngle] = useState(MIN_ANGLE);
   const [dragging, setDragging] = useState(false);
   const [value, setValue] = useState(0);
@@ -50,6 +50,9 @@ const Knob = ({ top, left, size }) => {
   );
 
   const knobSize = useMemo(() => size || DEFAULT_KNOB_SIZE, [size]);
+  const indicatorClass = useMemo(() => {
+    return type === "dot" ? "dot" : "line";
+  }, [type]);
 
   return (
     <div
@@ -65,7 +68,7 @@ const Knob = ({ top, left, size }) => {
       onMouseMove={onMouseMove}
       onMouseUp={onMouseUp}
     >
-      <span className="knob-dot"></span>
+      <span className={`indicator ${indicatorClass}`}></span>
     </div>
   );
 };
