@@ -8,6 +8,7 @@ import {
   Notes,
   PatchBay,
   DownloadPatch,
+  OpenPatch,
 } from "./components";
 import { PatchProvider } from "./state/Context";
 
@@ -16,6 +17,7 @@ function App() {
     <PatchProvider>
       <div className="App">
         <DownloadPatch />
+        <OpenPatch />
         <React.StrictMode>
           <div className="mss-container">
             <img src={mssPatchBlack} className="mss-patch-black" alt="logo" />

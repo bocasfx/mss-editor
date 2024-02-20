@@ -23,6 +23,10 @@ const patchReducer = (patch, action) => {
     case "download": {
       return handleDownload(patch);
     }
+    case "open": {
+      const { patch: newPatch } = action;
+      return { ...JSON.parse(newPatch) }
+    }
     case "update": {
       return handleUpdate(patch, action);
     }
