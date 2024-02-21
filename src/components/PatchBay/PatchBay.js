@@ -4,6 +4,7 @@ import { Jack } from "../common";
 import { transformCoords } from "../../utils";
 import { IN, OUT } from "../../constants";
 import { INDICATOR_COLOR } from "../../constants/colors";
+import { getRandomColor } from "../../utils/color";
 
 const PatchBay = ({ width, height, top, left }) => {
   const [dragging, setDragging] = useState(false);
@@ -13,6 +14,7 @@ const PatchBay = ({ width, height, top, left }) => {
     y1: 0,
     x2: 0,
     y2: 0,
+    color: INDICATOR_COLOR
   });
 
   const svgRef = useRef(null);
@@ -27,6 +29,7 @@ const PatchBay = ({ width, height, top, left }) => {
         y1: y,
         x2: x,
         y2: y,
+        color: getRandomColor(),
       });
     },
     [setDragging]
@@ -58,18 +61,39 @@ const PatchBay = ({ width, height, top, left }) => {
 
   const renderPatchCords = () => {
     return coords.map((coord, index) => {
+      const { x1, y1, x2, y2, color } = coord;
       return (
         <line
           key={index}
-          x1={coord.x1}
-          y1={coord.y1}
-          x2={coord.x2}
-          y2={coord.y2}
-          stroke={INDICATOR_COLOR}
+          x1={x1}
+          y1={y1}
+          x2={x2}
+          y2={y2}
+          stroke={color}
           strokeWidth={5}
+          opacity={dragging ? 0.3 : 1}
         />
       );
     });
+  };
+
+  const renderCurrentPatchCord = (coord) => {
+    if (!dragging) {
+      return null;
+    }
+
+    const { x1, y1, x2, y2, color } = coord;
+
+    return (
+      <line
+        x1={x1}
+        y1={y1}
+        x2={x2}
+        y2={y2}
+        stroke={color}
+        strokeWidth={5}
+      />
+    );
   };
 
   const renderJacks = (count) => {
@@ -100,6 +124,7 @@ const PatchBay = ({ width, height, top, left }) => {
         <div className="subharmonicon-jacks">{renderJacks(32)}</div>
         <svg className="svg" ref={svgRef}>
           {renderPatchCords()}
+          {renderCurrentPatchCord(currentCoord)}
         </svg>
       </div>
     </div>
