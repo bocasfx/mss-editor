@@ -1,26 +1,27 @@
-label.open-patch-container input[type="file"] {
-  position:absolute;
-  top: -1000px;
-}
-
-/***** Example custom styling *****/
 .open-patch-container {
-  border: 2px solid #AAA;
-  border-radius: 4px;
+
   padding: 2px 5px;
   margin: 2px;
-  background: #DDD;
+  background: black;
   display: inline-block;
 }
+
 .open-patch-container:hover {
-  background: #CCC;
+  background: black;
 }
+
 .open-patch-container:active {
-  background: #CCF;
+  background: black;
 }
+
 .open-patch-container :invalid + span {
-  color: #A44;
+  color: #6f6b65;
 }
+
 .open-patch-container :valid + span {
-  color: #4A4;
+  color: #6f6b65;
+}
+
+.open-patch-input {
+  display: none;
 }

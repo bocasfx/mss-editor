@@ -1,0 +1,5 @@
+const MAX_ANGLE = 150;
+const MIN_ANGLE = -150;
+const DEFAULT_KNOB_SIZE = 80;
+
+export { MAX_ANGLE, MIN_ANGLE, DEFAULT_KNOB_SIZE };

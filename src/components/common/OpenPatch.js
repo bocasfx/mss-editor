@@ -1,3 +1,4 @@
+import './OpenPatch.css';
 import { usePatchDispatch } from "../../state/Context";
 
 const OpenPatch = () => {
@@ -5,6 +6,7 @@ const OpenPatch = () => {
   return (
     <label className="open-patch-container">
       <input
+        className="open-patch-input"
         type="file"
         required
         onChange={(event) => {
@@ -23,7 +25,7 @@ const OpenPatch = () => {
           reader.readAsText(event.target.files[0]);
         }}
       />
-      <span>My Label</span>
+      <span>Open</span>
     </label>
   );
 };

@@ -1,16 +1,23 @@
 import { useCallback, useMemo, useState } from "react";
 import "./Knob.css";
 import { usePatchDispatch } from "../../state/Context";
+import { DEFAULT_KNOB_SIZE, MAX_ANGLE, MIN_ANGLE } from "../../constants";
+import { calculateValue } from "../../utils/knob";
 
-const MAX_ANGLE = 150;
-const MIN_ANGLE = -150;
-const DEFAULT_KNOB_SIZE = 80;
-
-const Knob = ({ top, left, size, type, id }) => {
+const Knob = ({ top, left, size, type, id, loadedAngle }) => {
   const [angle, setAngle] = useState(MIN_ANGLE);
   const [dragging, setDragging] = useState(false);
   const [value, setValue] = useState(0);
   const dispatch = usePatchDispatch();
+
+  useMemo(() => {
+    if (loadedAngle) {
+      console.log("loadedAngle", loadedAngle);
+      const newValue = calculateValue(loadedAngle);
+      setAngle(loadedAngle);
+      setValue(newValue);
+    }
+  }, [loadedAngle]);
 
   const onMouseDown = useCallback(
     (event) => {
@@ -32,9 +39,7 @@ const Knob = ({ top, left, size, type, id }) => {
       newAngle = newAngle >= MAX_ANGLE ? MAX_ANGLE : newAngle;
       newAngle = newAngle <= MIN_ANGLE ? MIN_ANGLE : newAngle;
 
-      const newValue = Math.round(
-        ((newAngle - MIN_ANGLE) / (MAX_ANGLE - MIN_ANGLE)) * 100
-      );
+      const newValue = calculateValue(newAngle);
 
       setAngle(newAngle);
       setValue(newValue);
