@@ -3,6 +3,8 @@ import "./Knob.css";
 import { usePatchDispatch } from "../../state/Context";
 import { DEFAULT_KNOB_SIZE, MAX_ANGLE, MIN_ANGLE } from "../../constants";
 import { calculateValue } from "../../utils/knob";
+import { INDICATOR_COLOR } from "../../constants/colors";
+import { UPDATE } from "../../constants/actions";
 
 const Knob = ({ top, left, size, type, id, loadedAngle }) => {
   const [angle, setAngle] = useState(MIN_ANGLE);
@@ -52,7 +54,7 @@ const Knob = ({ top, left, size, type, id, loadedAngle }) => {
       setDragging(false);
       document.exitPointerLock();
       dispatch({
-        type: "update",
+        type: UPDATE,
         id: id,
         value: { value, angle },
       });
@@ -79,7 +81,10 @@ const Knob = ({ top, left, size, type, id, loadedAngle }) => {
       onMouseMove={onMouseMove}
       onMouseUp={onMouseUp}
     >
-      <span className={`indicator ${indicatorClass}`}></span>
+      <span
+        className={`indicator ${indicatorClass}`}
+        style={{ backgroundColor: INDICATOR_COLOR }}
+      ></span>
     </div>
   );
 };

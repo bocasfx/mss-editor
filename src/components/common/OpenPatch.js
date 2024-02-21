@@ -1,5 +1,6 @@
 import './OpenPatch.css';
 import { usePatchDispatch } from "../../state/Context";
+import { OPEN, LOAD } from '../../constants/actions';
 
 const OpenPatch = () => {
   const dispatch = usePatchDispatch();
@@ -12,11 +13,11 @@ const OpenPatch = () => {
         onChange={(event) => {
           const reader = new FileReader();
           reader.addEventListener(
-            "load",
+            LOAD,
             (event) => {
               const patch = event.target.result;
               dispatch({
-                type: "open",
+                type: OPEN,
                 patch,
               });
             },

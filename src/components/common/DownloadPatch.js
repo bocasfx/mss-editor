@@ -1,5 +1,6 @@
 import './DownloadPatch.css';
 import { usePatchDispatch } from "../../state/Context";
+import { DOWNLOAD } from '../../constants/actions';
 
 const DownloadPatch = () => {
   const dispatch = usePatchDispatch();
@@ -8,7 +9,7 @@ const DownloadPatch = () => {
       <button className='download-patch'
         onClick={() => {
           dispatch({
-            type: "download",
+            type: DOWNLOAD,
           });
         }}
       >

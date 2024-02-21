@@ -1,6 +1,7 @@
 import { createContext, useContext, useReducer } from "react";
 import { saveFile } from "../utils/file";
 import { initialState } from "./initialState";
+import { DOWNLOAD, OPEN, UPDATE } from "../constants/actions";
 
 const Context = createContext(null);
 const DispatchContext = createContext(null);
@@ -20,14 +21,14 @@ const handleUpdate = (patch, action) => {
 
 const patchReducer = (patch, action) => {
   switch (action.type) {
-    case "download": {
+    case DOWNLOAD: {
       return handleDownload(patch);
     }
-    case "open": {
+    case OPEN: {
       const { patch: newPatch } = action;
       return { ...JSON.parse(newPatch) }
     }
-    case "update": {
+    case UPDATE: {
       return handleUpdate(patch, action);
     }
     default: {

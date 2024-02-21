@@ -2,6 +2,8 @@ import { useCallback, useRef, useState } from "react";
 import "./PatchBay.css";
 import { Jack } from "../common";
 import { transformCoords } from "../../utils";
+import { IN, OUT } from "../../constants";
+import { INDICATOR_COLOR } from "../../constants/colors";
 
 const PatchBay = ({ width, height, top, left }) => {
   const [dragging, setDragging] = useState(false);
@@ -63,7 +65,7 @@ const PatchBay = ({ width, height, top, left }) => {
           y1={coord.y1}
           x2={coord.x2}
           y2={coord.y2}
-          stroke="gray"
+          stroke={INDICATOR_COLOR}
           strokeWidth={5}
         />
       );
@@ -73,7 +75,7 @@ const PatchBay = ({ width, height, top, left }) => {
   const renderJacks = (count) => {
     const jacks = [];
     for (let i = 0; i < count; i++) {
-      const type = i % 2 === 0 ? "in" : "out";
+      const type = i % 2 === 0 ? IN : OUT;
       jacks.push(<Jack type={type} key={i} onMouseDown={onMouseDown} />);
     }
     return jacks;
