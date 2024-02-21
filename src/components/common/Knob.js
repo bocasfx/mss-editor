@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import "./Knob.css";
 import { usePatchDispatch } from "../../state/Context";
 import { DEFAULT_KNOB_SIZE, MAX_ANGLE, MIN_ANGLE } from "../../constants";
@@ -10,9 +10,8 @@ const Knob = ({ top, left, size, type, id, loadedAngle }) => {
   const [value, setValue] = useState(0);
   const dispatch = usePatchDispatch();
 
-  useMemo(() => {
+  useEffect(() => {
     if (loadedAngle) {
-      console.log("loadedAngle", loadedAngle);
       const newValue = calculateValue(loadedAngle);
       setAngle(loadedAngle);
       setValue(newValue);
