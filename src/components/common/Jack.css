@@ -3,6 +3,7 @@
   height: 25px;
   border-radius: 50%;
   opacity: 0;
+  cursor: pointer;
 }
 
 .jack.in {

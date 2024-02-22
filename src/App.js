@@ -9,6 +9,7 @@ import {
   PatchBay,
   DownloadPatch,
   OpenPatch,
+  Mother32Seq,
 } from "./components";
 import { PatchProvider } from "./state/Context";
 
@@ -38,6 +39,7 @@ function App() {
               height={125}
             />
             <PatchBay top={615} left={911} width={173} height={1241} />
+            <Mother32Seq left={197} top={403}/>
             <DFAM />
             <Mother32 />
             <Subharmonicon />

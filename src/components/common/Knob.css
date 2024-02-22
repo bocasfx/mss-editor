@@ -3,6 +3,7 @@
   position: absolute;
   line-height: 0;
   /* border: 1px solid yellow; */
+  cursor: pointer;
 }
 
 .knob-container .indicator {
