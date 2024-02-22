@@ -5,17 +5,17 @@
   /* border: 1px solid yellow; */
 }
 
-.indicator {
+.knob-container .indicator {
   display: inline-block;
 }
 
-.dot {
+.knob-container .indicator.dot {
   height: 8px;
   width: 8px;
   border-radius: 50%;
 }
 
-.line {
+.knob-container .indicator.line {
   height: 8px;
   width: 2px;
 }

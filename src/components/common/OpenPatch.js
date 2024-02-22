@@ -7,7 +7,6 @@ const OpenPatch = () => {
   return (
     <label className="open-patch-container">
       <input
-        className="open-patch-input"
         type="file"
         required
         onChange={(event) => {

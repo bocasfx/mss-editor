@@ -4,13 +4,13 @@
   position: absolute;
 }
 
-.svg-container {
+.patch-bay-container .svg-container {
   position: relative;
   width: 100%;
   height: 100%;
 }
 
-.dfam-jacks {
+.patch-bay-container .svg-container .dfam-jacks {
   position: absolute;
   top: 2px;
   left: 47px;
@@ -21,7 +21,7 @@
   grid-row-gap: 18.4px;
 }
 
-.mother32-jacks {
+.patch-bay-container .svg-container .mother32-jacks {
   position: absolute;
   top: 452px;
   left: 6px;
@@ -32,7 +32,7 @@
   grid-row-gap: 18.5px;
 }
 
-.subharmonicon-jacks {
+.patch-bay-container .svg-container .subharmonicon-jacks {
   position: absolute;
   top: 907px;
   left: 11px;
@@ -43,7 +43,7 @@
   grid-row-gap: 18.8px;
 }
 
-.svg {
+.patch-bay-container .svg-container .svg {
   position: absolute;
   width: 100%;
   height: 100%;

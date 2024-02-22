@@ -1,0 +1,27 @@
+.toggle-container {
+  border-radius: 50%;
+  position: absolute;
+  height: 25px;
+  width: 25px;
+}
+
+.toggle-container .dot {
+  height: 8px;
+  width: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+  top: 0px;
+}
+
+.toggle-container .dot.up {
+  top: -27px;
+}
+
+.toggle-container .dot.down {
+  top: 22px;
+}
+
+.toggle-container .dot.mid {
+  top: -2px;
+}

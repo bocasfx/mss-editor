@@ -5,10 +5,10 @@
   opacity: 0;
 }
 
-.in {
+.jack.in {
   background-color: darkorange;
 }
 
-.out {
+.jack.out {
   background-color: cadetblue;
 }
