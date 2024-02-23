@@ -1,10 +1,8 @@
 import { useCallback, useRef, useState } from "react";
 import "./PatchBay.css";
-import { Jack } from "../../common";
-import { transformCoords } from "../../../utils";
-import { IN, OUT } from "../../../constants";
-import { INDICATOR_COLOR } from "../../../constants/colors";
-import { getRandomColor } from "../../../utils/color";
+import { Jack } from "../../controls";
+import { transformCoords, getRandomColor } from "../../../utils";
+import { IN, OUT, INDICATOR_COLOR } from "../../../constants";
 
 const PatchBay = ({ width, height, top, left }) => {
   const [dragging, setDragging] = useState(false);

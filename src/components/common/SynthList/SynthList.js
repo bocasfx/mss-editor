@@ -1,4 +1,5 @@
-import React, { forwardRef } from "react";
+import './SynthList.css';
+import { forwardRef } from "react";
 
 const SynthList = forwardRef(({ children, ...props }, ref) => {
   return (
@@ -8,4 +9,4 @@ const SynthList = forwardRef(({ children, ...props }, ref) => {
   );
 });
 
-export default SynthList;
+export { SynthList };

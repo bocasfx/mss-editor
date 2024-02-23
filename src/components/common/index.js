@@ -1,5 +1,5 @@
-export * from '../controls/Knob';
 export * from './Notes';
-export * from '../controls/Jack';
 export * from './DownloadPatch';
 export * from './OpenPatch';
+export * from './Synth';
+export * from './SynthList';
