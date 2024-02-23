@@ -1,6 +1,6 @@
 import './DownloadPatch.css';
-import { usePatchDispatch } from "../../state/Context";
-import { DOWNLOAD } from '../../constants/actions';
+import { usePatchDispatch } from "../../../state/Context";
+import { DOWNLOAD } from '../../../constants/actions';
 
 const DownloadPatch = () => {
   const dispatch = usePatchDispatch();

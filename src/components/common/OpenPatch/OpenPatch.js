@@ -1,6 +1,6 @@
 import './OpenPatch.css';
-import { usePatchDispatch } from "../../state/Context";
-import { OPEN, LOAD } from '../../constants/actions';
+import { usePatchDispatch } from "../../../state/Context";
+import { OPEN, LOAD } from '../../../constants/actions';
 
 const OpenPatch = () => {
   const dispatch = usePatchDispatch();

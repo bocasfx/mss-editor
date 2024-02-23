@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { INDICATOR_COLOR } from "../../constants/colors";
-import { DOWN, DT } from "../../constants/toggle";
+import { INDICATOR_COLOR } from "../../../constants/colors";
+import { DOWN, DT } from "../../../constants/toggle";
 import "./Toggle.css";
 
 const Toggle = ({ left, top, type }) => {

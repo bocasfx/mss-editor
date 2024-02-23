@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import "./Knob.css";
-import { usePatchDispatch } from "../../state/Context";
-import { DEFAULT_KNOB_SIZE, MAX_ANGLE, MIN_ANGLE } from "../../constants";
-import { calculateValue } from "../../utils/knob";
-import { INDICATOR_COLOR } from "../../constants/colors";
-import { UPDATE } from "../../constants/actions";
+import { usePatchDispatch } from "../../../state/Context";
+import { DEFAULT_KNOB_SIZE, MAX_ANGLE, MIN_ANGLE } from "../../../constants";
+import { calculateValue } from "../../../utils/knob";
+import { INDICATOR_COLOR } from "../../../constants/colors";
+import { UPDATE } from "../../../constants/actions";
 
 const Knob = ({ top, left, size, type, id, loadedAngle }) => {
   const [angle, setAngle] = useState(MIN_ANGLE);

@@ -1,10 +1,10 @@
-import './CheckBox.css';
+import './Checkbox.css';
 
-const CheckBox = ({ left, top }) => {
+const Checkbox = ({ left, top }) => {
   return (
     <div className='checkbox-container' style={{ left: `${left}px`, top: `${top}px` }}>
     </div>
   );
 };
 
-export { CheckBox };
+export { Checkbox };
