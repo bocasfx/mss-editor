@@ -1,17 +1,17 @@
 import React from "react";
 import "./App.css";
-import mssPatchBlack from "./assets/mss-patch-black.svg";
 import {
   DFAM,
-  Mother32,
-  Subharmonicon,
-  Notes,
-  PatchBay,
   DownloadPatch,
+  Mother32,
   OpenPatch,
-  Mother32Seq,
+  Subharmonicon,
 } from "./components";
 import { PatchProvider } from "./state/Context";
+import { Header } from "./components";
+import { Sequencer } from "./components/sections/02-Sequencer";
+import { Divider } from "./components/sections/03-Divider";
+import { Footer } from "./components/sections/07-Footer";
 
 function App() {
   return (
@@ -21,28 +21,13 @@ function App() {
         <OpenPatch />
         <React.StrictMode>
           <div className="mss-container">
-            <img src={mssPatchBlack} className="mss-patch-black" alt="logo" />
-            <Notes
-              id="patch-name"
-              multiline={false}
-              top={65}
-              left={425}
-              width={351}
-              height={92}
-            />
-            <Notes
-              id="patch-notes"
-              multiline
-              top={200}
-              left={121}
-              width={953}
-              height={125}
-            />
-            <PatchBay top={615} left={911} width={173} height={1241} />
-            <Mother32Seq left={197} top={403}/>
+            <Header />
+            <Sequencer />
+            <Divider />
             <DFAM />
             <Mother32 />
             <Subharmonicon />
+            <Footer />
           </div>
         </React.StrictMode>
       </div>

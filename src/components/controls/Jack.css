@@ -1,0 +1,15 @@
+.jack {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.jack.in {
+  background-color: darkorange;
+}
+
+.jack.out {
+  background-color: cadetblue;
+}
