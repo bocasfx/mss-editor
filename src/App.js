@@ -10,6 +10,7 @@ import {
   Footer,
   SynthList,
   PatchBay,
+  Cables,
 } from "./components";
 import { PatchProvider } from "./state/Context";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
@@ -65,6 +66,7 @@ function App() {
 
   return (
     <PatchProvider>
+      <Cables />
       <div className="App">
         <DownloadPatch />
         <OpenPatch />
