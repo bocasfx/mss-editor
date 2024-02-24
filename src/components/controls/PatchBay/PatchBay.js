@@ -1,29 +1,35 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import "./PatchBay.css";
 import { Jack } from "../../controls";
-import { transformCoords, getRandomColor } from "../../../utils";
-import {
-  IN,
-  OUT,
-  INDICATOR_COLOR,
-  CLEAR,
-  SYNTH_SECTION_HEIGHT,
-} from "../../../constants";
+import { transformCoords } from "../../../utils";
+import { IN, OUT, CLEAR, SYNTH_SECTION_HEIGHT } from "../../../constants";
 import { usePatchDispatch } from "../../../state/Context";
+import * as d3 from "d3";
+import {
+  FORCE_Y,
+  CABLE_SEGMENTS,
+  FORCE_Y_STRENGTH,
+  FORCE_COLLIDE,
+  FORCE_LINK_STRENGTH,
+} from "../../../constants";
 
 const PatchBay = ({ synths, width, height, top, left }) => {
-  const [dragging, setDragging] = useState(false);
-  const [coords, setCoords] = useState([]);
-  const [currentCoord, setCurrentCoord] = useState({
-    x1: 0,
-    y1: 0,
-    x2: 0,
-    y2: 0,
-    color: INDICATOR_COLOR,
-  });
   const dispatch = usePatchDispatch();
-
   const svgRef = useRef(null);
+  const cable = useRef(null);
+  const cableCount = useRef(0);
+  const [coords, setCoords] = useState([]);
+  const [currentCoord, setCurrentCoord] = useState({});
+
+  const simulationNodeDrawer = useMemo(
+    () =>
+      d3
+        .line()
+        .x((d) => d.x)
+        .y((d) => d.y)
+        .curve(d3.curveBasis),
+    []
+  );
 
   useEffect(() => {
     dispatch({
@@ -33,84 +39,111 @@ const PatchBay = ({ synths, width, height, top, left }) => {
 
   const onMouseDown = useCallback(
     (event) => {
-      event.stopPropagation();
+      const svg = d3.select(svgRef.current);
+      let _cable = svg
+        .append("path")
+        .attr("stroke", d3.schemeCategory10[cableCount.current % 10])
+        .attr("stroke-width", 5)
+        .attr("fill", "none")
+        .attr("id", `cable-${cableCount.current}`);
+
+      cable.current = _cable;
+
+      // Create the nodes
+      const nodes = d3.range(CABLE_SEGMENTS).map(() => ({}));
+
+      // Link the nodes
+      const links = d3
+        .pairs(nodes)
+        .map(([source, target]) => ({ source, target }));
+
+      // fix the position of the first node where you clicked
       const { x, y } = transformCoords(svgRef, event.clientX, event.clientY);
-      setDragging(true);
-      setCurrentCoord({
-        x1: x,
-        y1: y,
-        x2: x,
-        y2: y,
-        color: getRandomColor(),
-      });
+      nodes[0].fx = x;
+      nodes[0].fy = y;
+      nodes[nodes.length - 1].fx = x;
+      nodes[nodes.length - 1].fy = y;
+      setCurrentCoord({ x1: x, y1: y });
+
+      // use a force simulation to simulate the cable
+      const sim = d3
+        .forceSimulation(nodes)
+        .force("gravity", d3.forceY(FORCE_Y).strength(FORCE_Y_STRENGTH)) // simulate gravity
+        .force("collide", d3.forceCollide(FORCE_COLLIDE)) // simulate cable auto disentanglement (cable nodes will push each other away)
+        .force("links", d3.forceLink(links).strength(FORCE_LINK_STRENGTH)) // string the cables nodes together
+        .on("tick", () =>
+          _cable.attr("d", (d) => simulationNodeDrawer(d.nodes))
+        ); // draw the path on each simulation tick
+
+      // each cable has its own nodes and simulation
+      cable.current.datum({ nodes, sim });
+      cableCount.current += 1;
     },
-    [setDragging]
+    [simulationNodeDrawer]
   );
 
   const onMouseUp = useCallback(
     (event) => {
       event.stopPropagation();
-      setDragging(false);
-      setCoords([...coords, currentCoord]);
+      const { x, y } = transformCoords(svgRef, event.clientX, event.clientY);
+
+      if (x === currentCoord.x1 && y === currentCoord.y1) {
+        console.log("same position");
+      } else {
+        const { x1, y1 } = currentCoord;
+        setCoords([...coords, { x1, y1, x2: x, y2: y }]);
+      }
+
+      cable.current = undefined;
     },
     [coords, currentCoord]
   );
 
-  const onMouseMove = useCallback(
-    (event) => {
-      event.stopPropagation();
-      if (dragging) {
-        const { x, y } = transformCoords(svgRef, event.clientX, event.clientY);
-        setCurrentCoord({
-          ...currentCoord,
-          x2: x,
-          y2: y,
-        });
-      }
-    },
-    [dragging, currentCoord]
-  );
+  useEffect(() => {
+    console.log("coords", coords);
+  }, [coords]);
 
-  const renderPatchCords = () => {
-    return coords.map((coord, index) => {
-      const { x1, y1, x2, y2, color } = coord;
-      return (
-        <line
-          key={index}
-          x1={x1}
-          y1={y1}
-          x2={x2}
-          y2={y2}
-          stroke={color}
-          strokeWidth={5}
-          opacity={dragging ? 0.3 : 1}
-        />
+  const onMouseMove = useCallback((event) => {
+    event.stopPropagation();
+    if (cable.current) {
+      const { nodes, sim } = cable.current.datum();
+      const start = nodes[0];
+      const end = nodes[nodes.length - 1];
+
+      const { x, y } = transformCoords(svgRef, event.clientX, event.clientY);
+      // set new position of the end of the cable
+      end.fx = x;
+      end.fy = y;
+
+      // measure distance
+      const distance = Math.sqrt(
+        Math.pow(end.fx - start.fx, 2) + Math.pow(end.fy - start.fy, 2)
       );
-    });
-  };
 
-  const renderCurrentPatchCord = (coord) => {
-    if (!dragging) {
-      return null;
+      // set the link distance
+      sim.force("links").distance(distance / CABLE_SEGMENTS);
+      sim.alpha(1);
+      sim.restart();
     }
-
-    const { x1, y1, x2, y2, color } = coord;
-
-    return (
-      <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={color} strokeWidth={5} />
-    );
-  };
+  }, []);
 
   const renderJacks = useCallback(
     (count) => {
       const jacks = [];
       for (let i = 0; i < count; i++) {
         const type = i % 2 === 0 ? IN : OUT;
-        jacks.push(<Jack type={type} key={i} onMouseDown={onMouseDown} />);
+        jacks.push(
+          <Jack
+            type={type}
+            key={i}
+            onMouseDown={onMouseDown}
+            onMouseUp={onMouseUp}
+          />
+        );
       }
       return jacks;
     },
-    [onMouseDown]
+    [onMouseDown, onMouseUp]
   );
 
   const renderSections = useCallback(() => {
@@ -141,14 +174,10 @@ const PatchBay = ({ synths, width, height, top, left }) => {
         position: "absolute",
       }}
       onMouseMove={onMouseMove}
-      onMouseUp={onMouseUp}
     >
       <div className="svg-container">
         {renderSections()}
-        <svg className="svg" ref={svgRef}>
-          {renderPatchCords()}
-          {renderCurrentPatchCord(currentCoord)}
-        </svg>
+        <svg className="svg" ref={svgRef}></svg>
       </div>
     </div>
   );
