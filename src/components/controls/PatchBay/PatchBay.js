@@ -1,10 +1,11 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import "./PatchBay.css";
 import { Jack } from "../../controls";
 import { transformCoords, getRandomColor } from "../../../utils";
-import { IN, OUT, INDICATOR_COLOR } from "../../../constants";
+import { IN, OUT, INDICATOR_COLOR, CLEAR } from "../../../constants";
+import { usePatchDispatch } from "../../../state/Context";
 
-const PatchBay = ({ width, height, top, left }) => {
+const PatchBay = ({ synths, width, height, top, left }) => {
   const [dragging, setDragging] = useState(false);
   const [coords, setCoords] = useState([]);
   const [currentCoord, setCurrentCoord] = useState({
@@ -12,10 +13,17 @@ const PatchBay = ({ width, height, top, left }) => {
     y1: 0,
     x2: 0,
     y2: 0,
-    color: INDICATOR_COLOR
+    color: INDICATOR_COLOR,
   });
+  const dispatch = usePatchDispatch();
 
   const svgRef = useRef(null);
+
+  useEffect(() => {
+    dispatch({
+      type: CLEAR,
+    });
+  }, [dispatch, synths]);
 
   const onMouseDown = useCallback(
     (event) => {
@@ -83,25 +91,29 @@ const PatchBay = ({ width, height, top, left }) => {
     const { x1, y1, x2, y2, color } = coord;
 
     return (
-      <line
-        x1={x1}
-        y1={y1}
-        x2={x2}
-        y2={y2}
-        stroke={color}
-        strokeWidth={5}
-      />
+      <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={color} strokeWidth={5} />
     );
   };
 
-  const renderJacks = (count) => {
+  const renderJacks = useCallback((count) => {
     const jacks = [];
     for (let i = 0; i < count; i++) {
       const type = i % 2 === 0 ? IN : OUT;
       jacks.push(<Jack type={type} key={i} onMouseDown={onMouseDown} />);
     }
     return jacks;
-  };
+  }, [onMouseDown]);
+
+  const renderSections = useCallback(() => {
+    return synths.map((synth, index) => {
+      const { id, patchBayCount } = synth;
+      return (
+        <div key={id} className={`${id.toLowerCase()}-jacks`}>
+          {renderJacks(patchBayCount)}
+        </div>
+      );
+    });
+  }, [renderJacks, synths]);
 
   return (
     <div
@@ -117,9 +129,7 @@ const PatchBay = ({ width, height, top, left }) => {
       onMouseUp={onMouseUp}
     >
       <div className="svg-container">
-        <div className="dfam-jacks">{renderJacks(24)}</div>
-        <div className="mother32-jacks">{renderJacks(32)}</div>
-        <div className="subharmonicon-jacks">{renderJacks(32)}</div>
+        {renderSections()}
         <svg className="svg" ref={svgRef}>
           {renderPatchCords()}
           {renderCurrentPatchCord(currentCoord)}
