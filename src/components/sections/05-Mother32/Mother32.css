@@ -1,0 +1,15 @@
+.mother32-container {
+  position: relative;
+  width: 1200px;
+  background-image: url('../../../img/05-Mother32.png');
+}
+
+.mother32-container .drag-handle {
+  top: 400px;
+  left: 186px;
+  width: 224px;
+  height: 33px;
+  background-color: mistyrose;
+  position: relative;
+  opacity: 0;
+}

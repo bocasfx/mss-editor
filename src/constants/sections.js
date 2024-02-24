@@ -1,0 +1,3 @@
+const SYNTH_SECTION_HEIGHT = 453;
+
+export { SYNTH_SECTION_HEIGHT };

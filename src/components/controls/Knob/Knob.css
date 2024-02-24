@@ -1,0 +1,22 @@
+.knob-container {
+  /* border: 1px solid yellow; */
+  user-select: none;
+  position: absolute;
+  line-height: 0;
+  cursor: pointer;
+}
+
+.knob-container .indicator {
+  display: inline-block;
+}
+
+.knob-container .indicator.dot {
+  height: 8px;
+  width: 8px;
+  border-radius: 50%;
+}
+
+.knob-container .indicator.line {
+  height: 8px;
+  width: 2px;
+}

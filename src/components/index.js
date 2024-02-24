@@ -1,3 +1,3 @@
-export * from './PatchBay';
 export * from './common';
-export * from './synths';
+export * from './sections';
+export * from './controls';

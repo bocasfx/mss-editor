@@ -1,0 +1,58 @@
+.patch-bay-container {
+  position: absolute;
+  top: 543px;
+  left: 910px;
+  width: 180px;
+  height: 1359px;
+}
+
+.patch-bay-container .svg-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.patch-bay-container .svg-container .jacks {
+  position: absolute;
+  display: grid;
+}
+
+.patch-bay-container .svg-container .dfam-jacks {
+  left: 47px;
+  margin-top: 67px;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+  grid-column-gap: 19px;
+  grid-row-gap: 18.3px;
+}
+
+.patch-bay-container .svg-container .mother32-jacks {
+  left: 6px;
+  margin-top: 61px;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+  grid-column-gap: 19px;
+  grid-row-gap: 18.5px;
+}
+
+.patch-bay-container .svg-container .subharmonicon-jacks {
+  left: 11px;
+  margin-top: 63px;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+  grid-column-gap: 19px;
+  grid-row-gap: 18.8px;
+}
+
+.patch-bay-container .svg-container .svg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
+
+.svg line {
+  pointer-events: none;
+}

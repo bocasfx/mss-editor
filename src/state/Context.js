@@ -1,7 +1,7 @@
 import { createContext, useContext, useReducer } from "react";
 import { saveFile } from "../utils/file";
 import { initialState } from "./initialState";
-import { DOWNLOAD, OPEN, UPDATE } from "../constants/actions";
+import { CLEAR, DOWNLOAD, OPEN, UPDATE } from "../constants/actions";
 
 const Context = createContext(null);
 const DispatchContext = createContext(null);
@@ -30,6 +30,9 @@ const patchReducer = (patch, action) => {
     }
     case UPDATE: {
       return handleUpdate(patch, action);
+    }
+    case CLEAR: {
+      return { ...initialState };
     }
     default: {
       throw Error("Unknown action: " + action.type);
