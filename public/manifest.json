@@ -1,6 +1,6 @@
 {
-  "short_name": "MSS-Editor",
-  "name": "MSS-Editor",
+  "short_name": "MSS-Patch-Editor",
+  "name": "MSS-Patch-Editor",
   "icons": [
     {
       "src": "favicon.ico",
