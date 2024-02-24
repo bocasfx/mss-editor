@@ -75,7 +75,7 @@ function App() {
           <Divider />
           {renderSynths()}
           <Footer />
-          <PatchBay top={606} left={910} synths={synths} />
+          <PatchBay synths={synths} />
         </div>
         {/* </React.StrictMode> */}
       </div>

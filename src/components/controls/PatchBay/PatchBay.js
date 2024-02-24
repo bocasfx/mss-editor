@@ -2,7 +2,13 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import "./PatchBay.css";
 import { Jack } from "../../controls";
 import { transformCoords, getRandomColor } from "../../../utils";
-import { IN, OUT, INDICATOR_COLOR, CLEAR } from "../../../constants";
+import {
+  IN,
+  OUT,
+  INDICATOR_COLOR,
+  CLEAR,
+  SYNTH_SECTION_HEIGHT,
+} from "../../../constants";
 import { usePatchDispatch } from "../../../state/Context";
 
 const PatchBay = ({ synths, width, height, top, left }) => {
@@ -95,20 +101,29 @@ const PatchBay = ({ synths, width, height, top, left }) => {
     );
   };
 
-  const renderJacks = useCallback((count) => {
-    const jacks = [];
-    for (let i = 0; i < count; i++) {
-      const type = i % 2 === 0 ? IN : OUT;
-      jacks.push(<Jack type={type} key={i} onMouseDown={onMouseDown} />);
-    }
-    return jacks;
-  }, [onMouseDown]);
+  const renderJacks = useCallback(
+    (count) => {
+      const jacks = [];
+      for (let i = 0; i < count; i++) {
+        const type = i % 2 === 0 ? IN : OUT;
+        jacks.push(<Jack type={type} key={i} onMouseDown={onMouseDown} />);
+      }
+      return jacks;
+    },
+    [onMouseDown]
+  );
 
   const renderSections = useCallback(() => {
     return synths.map((synth, index) => {
       const { id, patchBayCount } = synth;
       return (
-        <div key={id} className={`${id.toLowerCase()}-jacks`}>
+        <div
+          key={id}
+          className={`jacks ${id.toLowerCase()}-jacks`}
+          style={{
+            top: `${index * SYNTH_SECTION_HEIGHT}px`,
+          }}
+        >
           {renderJacks(patchBayCount)}
         </div>
       );
