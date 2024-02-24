@@ -1,13 +1,19 @@
 import "./Cables.css";
 import React, { useRef, useEffect, useMemo } from "react";
 import * as d3 from "d3";
-const CABLE_SEGMENTS = 4;
+import {
+  FORCE_Y,
+  CABLE_SEGMENTS,
+  FORCE_Y_STRENGTH,
+  FORCE_COLLIDE,
+  FORCE_LINK_STRENGTH,
+} from "../../../constants";
 
 const Cables = () => {
   const d3Container = useRef(null);
 
-  let cable;
-  let i = 0;
+  const cable = useRef(null);
+  const cableCount = useRef(0);
 
   const simulationNodeDrawer = useMemo(
     () =>
@@ -28,10 +34,10 @@ const Cables = () => {
           // Start a new cable
           let c = svg
             .append("path")
-            .attr("stroke", d3.schemeCategory10[i % 10])
+            .attr("stroke", d3.schemeCategory10[cableCount.current % 10])
             .attr("fill", "none");
 
-          cable = c;
+          cable.current = c;
 
           // Create the nodes: o  o  o  o  o
           const nodes = d3.range(CABLE_SEGMENTS).map(() => ({}));
@@ -50,20 +56,20 @@ const Cables = () => {
           // use a force simulation to simulate the cable
           const sim = d3
             .forceSimulation(nodes)
-            .force("gravity", d3.forceY(2000).strength(0.005)) // simulate gravity
-            .force("collide", d3.forceCollide(20)) // simulate cable auto disentanglement (cable nodes will push each other away)
-            .force("links", d3.forceLink(links).strength(0.9)) // string the cables nodes together
+            .force("gravity", d3.forceY(FORCE_Y).strength(FORCE_Y_STRENGTH)) // simulate gravity
+            .force("collide", d3.forceCollide(FORCE_COLLIDE)) // simulate cable auto disentanglement (cable nodes will push each other away)
+            .force("links", d3.forceLink(links).strength(FORCE_LINK_STRENGTH)) // string the cables nodes together
             .on("tick", () =>
               c.attr("d", (d) => simulationNodeDrawer(d.nodes))
             ); // draw the path on each simulation tick
 
           // each cable has its own nodes and simulation
-          cable.datum({ nodes, sim });
-          i++;
+          cable.current.datum({ nodes, sim });
+          cableCount.current += 1;
         })
         .on("mousemove", (event) => {
-          if (cable) {
-            const { nodes, sim } = cable.datum();
+          if (cable.current) {
+            const { nodes, sim } = cable.current.datum();
             const start = nodes[0];
             const end = nodes[nodes.length - 1];
 
@@ -82,9 +88,9 @@ const Cables = () => {
             sim.restart();
           }
         })
-        .on("mouseup", () => (cable = undefined));
+        .on("mouseup", () => (cable.current = undefined));
     }
-  }, [d3Container]);
+  }, [d3Container, cableCount, simulationNodeDrawer]);
 
   return (
     <svg className="cables-svg" width={400} height={200} ref={d3Container} />
