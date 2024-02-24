@@ -1,11 +1,8 @@
 import React, { useState } from "react";
 import "./App.css";
 import {
-  DFAM,
   DownloadPatch,
-  Mother32,
   OpenPatch,
-  Subharmonicon,
   Synth,
   Header,
   Sequencer,

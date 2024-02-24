@@ -1,8 +1,10 @@
 import './Subharmonicon.css';
 
-const Subharmonicon = () => {
+const Subharmonicon = ({ dragHandleProps }) => {
   return (
-    <div className="subharmonicon-container"></div>
+    <div className="subharmonicon-container">
+      <div className="drag-handle" {...dragHandleProps}></div>
+    </div>
   );
 }
 

@@ -1,4 +1,5 @@
 .toggle-container {
+  /* border: 1px solid yellow; */
   border-radius: 50%;
   position: absolute;
   height: 25px;

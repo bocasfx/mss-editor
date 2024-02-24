@@ -7,11 +7,11 @@ const Synth = forwardRef(
     const renderSynth = () => {
       switch (id) {
         case "MOTHER32":
-          return <Mother32 dragHandleProps={dragHandleProps}/>;
+          return <Mother32 dragHandleProps={dragHandleProps} />;
         case "DFAM":
-          return <DFAM />;
+          return <DFAM dragHandleProps={dragHandleProps} />;
         case "SUBHARMONICON":
-          return <Subharmonicon />;
+          return <Subharmonicon dragHandleProps={dragHandleProps} />;
         default:
           return <Mother32 />;
       }

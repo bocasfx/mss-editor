@@ -1,6 +1,16 @@
 .dfam-container {
-  /* border: 1px solid yellow; */
+  position: relative;
   width: 1200px;
-  height: 454px;
+  height: 453px;
   background-image: url('../../../img/04-DFAM.png');
+}
+
+.dfam-container .drag-handle {
+  top: 402px;
+  left: 177px;
+  width: 278px;
+  height: 33px;
+  background-color: mistyrose;
+  position: relative;
+  opacity: 0;
 }
