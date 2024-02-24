@@ -39,6 +39,7 @@ const PatchBay = ({ synths }) => {
 
   const onMouseDown = useCallback(
     (event) => {
+      event.stopPropagation();
       const svg = d3.select(svgRef.current);
       let _cable = svg
         .append("path")
@@ -89,19 +90,15 @@ const PatchBay = ({ synths }) => {
 
       if (x === currentCoord.x1 && y === currentCoord.y1) {
         console.log("same position");
+        cable.current.remove();
       } else {
         const { x1, y1 } = currentCoord;
         setCoords([...coords, { x1, y1, x2: x, y2: y }]);
+        cable.current = undefined;
       }
-
-      cable.current = undefined;
     },
     [coords, currentCoord]
   );
-
-  useEffect(() => {
-    console.log("coords", coords);
-  }, [coords]);
 
   const onMouseMove = useCallback((event) => {
     event.stopPropagation();
@@ -124,6 +121,13 @@ const PatchBay = ({ synths }) => {
       sim.force("links").distance(distance / CABLE_SEGMENTS);
       sim.alpha(1);
       sim.restart();
+    }
+  }, []);
+
+  const onContainerMouseUp = useCallback((event) => {
+    event.stopPropagation();
+    if (cable.current) {
+      cable.current.remove();
     }
   }, []);
 
@@ -164,7 +168,11 @@ const PatchBay = ({ synths }) => {
   }, [renderJacks, synths]);
 
   return (
-    <div className="patch-bay-container" onMouseMove={onMouseMove}>
+    <div
+      className="patch-bay-container"
+      onMouseMove={onMouseMove}
+      onMouseUp={onContainerMouseUp}
+    >
       <div className="svg-container">
         {renderSections()}
         <svg className="svg" ref={svgRef}></svg>
