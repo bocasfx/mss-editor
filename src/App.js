@@ -66,7 +66,6 @@ function App() {
 
   return (
     <PatchProvider>
-      <Cables />
       <div className="App">
         <DownloadPatch />
         <OpenPatch />
@@ -77,6 +76,7 @@ function App() {
           <Divider />
           {renderSynths()}
           <Footer />
+          {/* <Cables /> */}
           <PatchBay synths={synths} />
         </div>
         {/* </React.StrictMode> */}

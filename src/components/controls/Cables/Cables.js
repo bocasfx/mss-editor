@@ -8,6 +8,7 @@ import {
   FORCE_COLLIDE,
   FORCE_LINK_STRENGTH,
 } from "../../../constants";
+import { transformCoords } from "../../../utils";
 
 const Cables = () => {
   const d3Container = useRef(null);
@@ -35,6 +36,7 @@ const Cables = () => {
           let c = svg
             .append("path")
             .attr("stroke", d3.schemeCategory10[cableCount.current % 10])
+            .attr("stroke-width", 5)
             .attr("fill", "none");
 
           cable.current = c;
@@ -48,10 +50,13 @@ const Cables = () => {
             .map(([source, target]) => ({ source, target }));
 
           // fix the position of the first node where you clicked
-          nodes[0].fx = event.clientX - 100;
-          nodes[0].fy = event.clientY;
-          nodes[nodes.length - 1].fx = event.clientX - 100;
-          nodes[nodes.length - 1].fy = event.clientY;
+
+          const { x, y } = transformCoords(d3Container, event.clientX, event.clientY);
+
+          nodes[0].fx = x
+          nodes[0].fy = y
+          nodes[nodes.length - 1].fx = x
+          nodes[nodes.length - 1].fy = y
 
           // use a force simulation to simulate the cable
           const sim = d3
@@ -73,9 +78,10 @@ const Cables = () => {
             const start = nodes[0];
             const end = nodes[nodes.length - 1];
 
+            const { x, y } = transformCoords(d3Container, event.clientX, event.clientY);
             // set new position of the end of the cable
-            end.fx = event.clientX - 100;
-            end.fy = event.clientY;
+            end.fx = x;
+            end.fy = y;
 
             // measure distance
             const distance = Math.sqrt(
