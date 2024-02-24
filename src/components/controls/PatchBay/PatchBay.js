@@ -13,7 +13,7 @@ import {
   FORCE_LINK_STRENGTH,
 } from "../../../constants";
 
-const PatchBay = ({ synths, width, height, top, left }) => {
+const PatchBay = ({ synths }) => {
   const dispatch = usePatchDispatch();
   const svgRef = useRef(null);
   const cable = useRef(null);
@@ -148,7 +148,7 @@ const PatchBay = ({ synths, width, height, top, left }) => {
 
   const renderSections = useCallback(() => {
     return synths.map((synth, index) => {
-      const { id, patchBayCount } = synth;
+      const { id, patchBayJackCount } = synth;
       return (
         <div
           key={id}
@@ -157,24 +157,14 @@ const PatchBay = ({ synths, width, height, top, left }) => {
             top: `${index * SYNTH_SECTION_HEIGHT}px`,
           }}
         >
-          {renderJacks(patchBayCount)}
+          {renderJacks(patchBayJackCount)}
         </div>
       );
     });
   }, [renderJacks, synths]);
 
   return (
-    <div
-      className="patch-bay-container"
-      style={{
-        top: `${top}px`,
-        left: `${left}px`,
-        width: `${width}px`,
-        height: `${height}px`,
-        position: "absolute",
-      }}
-      onMouseMove={onMouseMove}
-    >
+    <div className="patch-bay-container" onMouseMove={onMouseMove}>
       <div className="svg-container">
         {renderSections()}
         <svg className="svg" ref={svgRef}></svg>

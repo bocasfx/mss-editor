@@ -3,7 +3,7 @@ import { DFAM, Mother32, Subharmonicon } from "../../sections";
 import { forwardRef } from "react";
 
 const Synth = forwardRef(
-  ({ id, dragHandleProps, snapshot, patchBayCount, ...props }, ref) => {
+  ({ id, dragHandleProps, snapshot, patchBayJackCount, ...props }, ref) => {
     const renderSynth = () => {
       switch (id) {
         case "MOTHER32":
