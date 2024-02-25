@@ -7,7 +7,7 @@ import { usePatchDispatch } from "../../../state/Context";
 import * as d3 from "d3";
 import {
   FORCE_Y,
-  CABLE_SEGMENTS,
+  PATCH_CORD_SEGMENTS,
   FORCE_Y_STRENGTH,
   FORCE_COLLIDE,
   FORCE_LINK_STRENGTH,
@@ -17,8 +17,8 @@ import { jackData } from "../../../data";
 const PatchBay = ({ synths }) => {
   const dispatch = usePatchDispatch();
   const svgRef = useRef(null);
-  const cable = useRef(null);
-  const cableCount = useRef(0);
+  const patchCord = useRef(null);
+  const patchCordCount = useRef(0);
   const [coords, setCoords] = useState([]);
   const [dragging, setDragging] = useState(false);
   const [currentCoord, setCurrentCoord] = useState({});
@@ -41,14 +41,14 @@ const PatchBay = ({ synths }) => {
 
   const calculatePatchCord = useCallback(
     (center) => {
-      if (cable.current && dragging) {
+      if (patchCord.current && dragging) {
         console.log("calculatePatchCord");
-        const { nodes, sim } = cable.current.datum();
+        const { nodes, sim } = patchCord.current.datum();
         const start = nodes[0];
         const end = nodes[nodes.length - 1];
 
         const { x, y } = transformCoords(svgRef, center.x, center.y);
-        // set new position of the end of the cable
+        // set new position of the end of the patchCord
         end.fx = x;
         end.fy = y;
 
@@ -58,7 +58,7 @@ const PatchBay = ({ synths }) => {
         );
 
         // set the link distance
-        sim.force("links").distance(distance / CABLE_SEGMENTS);
+        sim.force("links").distance(distance / PATCH_CORD_SEGMENTS);
         sim.alpha(1);
         sim.restart();
       }
@@ -71,18 +71,18 @@ const PatchBay = ({ synths }) => {
       event.stopPropagation();
       const svg = d3.select(svgRef.current);
 
-      let _cable = svg
+      let _patchCord = svg
         .append("path")
-        .attr("stroke", d3.schemeCategory10[cableCount.current % 10])
+        .attr("stroke", d3.schemeCategory10[patchCordCount.current % 10])
         .attr("stroke-width", 5)
         .attr("fill", "none")
         .attr("stroke-linecap", "round")
-        .attr("id", `cable-${cableCount.current}`);
+        .attr("id", `patchCord-${patchCordCount.current}`);
 
-      cable.current = _cable;
+      patchCord.current = _patchCord;
 
       // Create the nodes
-      const nodes = d3.range(CABLE_SEGMENTS).map(() => ({}));
+      const nodes = d3.range(PATCH_CORD_SEGMENTS).map(() => ({}));
 
       // Link the nodes
       const links = d3
@@ -97,19 +97,19 @@ const PatchBay = ({ synths }) => {
       nodes[nodes.length - 1].fy = y;
       setCurrentCoord({ x1: x, y1: y, type });
 
-      // use a force simulation to simulate the cable
+      // use a force simulation to simulate the patchCord
       const sim = d3
         .forceSimulation(nodes)
         .force("gravity", d3.forceY(FORCE_Y).strength(FORCE_Y_STRENGTH)) // simulate gravity
-        .force("collide", d3.forceCollide(FORCE_COLLIDE)) // simulate cable auto disentanglement (cable nodes will push each other away)
-        .force("links", d3.forceLink(links).strength(FORCE_LINK_STRENGTH)) // string the cables nodes together
+        .force("collide", d3.forceCollide(FORCE_COLLIDE)) // simulate patchCord auto disentanglement (patchCord nodes will push each other away)
+        .force("links", d3.forceLink(links).strength(FORCE_LINK_STRENGTH)) // string the patchCords nodes together
         .on("tick", () =>
-          _cable.attr("d", (d) => simulationNodeDrawer(d.nodes))
+          _patchCord.attr("d", (d) => simulationNodeDrawer(d.nodes))
         ); // draw the path on each simulation tick
 
-      // each cable has its own nodes and simulation
-      cable.current.datum({ nodes, sim });
-      cableCount.current += 1;
+      // each patchCord has its own nodes and simulation
+      patchCord.current.datum({ nodes, sim });
+      patchCordCount.current += 1;
 
       setDragging(true);
     },
@@ -134,13 +134,13 @@ const PatchBay = ({ synths }) => {
         (x === currentCoord.x1 && y === currentCoord.y1) ||
         type === currentCoord.type
       ) {
-        cable.current.remove();
+        patchCord.current.remove();
       } else {
         calculatePatchCord(center);
 
         const { x1, y1 } = currentCoord;
         setCoords([...coords, { x1, y1, x2: x, y2: y }]);
-        cable.current = undefined;
+        patchCord.current = undefined;
 
         setDragging(false);
       }
@@ -150,8 +150,8 @@ const PatchBay = ({ synths }) => {
 
   const containerMouseHandler = useCallback((event) => {
     event.stopPropagation();
-    if (cable.current) {
-      cable.current.remove();
+    if (patchCord.current) {
+      patchCord.current.remove();
     }
   }, []);
 
