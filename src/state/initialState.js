@@ -1,7 +1,7 @@
 const initialState = {
   name: "MSS Patch",
   notes: "This is a patch for the MSS.",
-  dfam: {
+  DFAM: {
     volume: 0,
     VCODecay: 0,
     seq: [
@@ -15,8 +15,8 @@ const initialState = {
       { pitch: 0, velocity: 0 },
     ],
   },
-  mother32: {},
-  subharmonicon: {},
+  Mother32: {},
+  Subharmonicon: {},
   patchBay: {},
 };
 

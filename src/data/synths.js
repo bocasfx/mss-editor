@@ -1,15 +1,14 @@
+import { DFAM, MOTHER32, SUBHARMONICON } from "../constants";
+
 const synthData = [
   {
-    id: "DFAM",
-    patchBayJackCount: 24,
+    id: DFAM,
   },
   {
-    id: "MOTHER32",
-    patchBayJackCount: 32,
+    id: MOTHER32,
   },
   {
-    id: "SUBHARMONICON",
-    patchBayJackCount: 32,
+    id: SUBHARMONICON,
   },
 ];
 

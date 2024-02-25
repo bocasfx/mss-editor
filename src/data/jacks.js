@@ -1,7 +1,7 @@
-import { IN, OUT } from "../constants";
+import { DFAM, IN, MOTHER32, OUT, SUBHARMONICON } from "../constants";
 
 const jackData = {
-  DFAM: [
+  [DFAM]: [
     {
       id: "trigger",
       type: IN,
@@ -99,7 +99,7 @@ const jackData = {
       type: OUT,
     },
   ],
-  MOTHER32: [
+  [MOTHER32]: [
     {
       id: "ext-audio",
       type: IN,
@@ -229,133 +229,133 @@ const jackData = {
       type: IN,
     },
   ],
-  SUBHARMONICON: [
+  [SUBHARMONICON]: [
     {
-      id: 'vco-1',
+      id: "vco-1",
       type: IN,
     },
     {
-      id: 'vco-1-sub',
+      id: "vco-1-sub",
       type: IN,
     },
     {
-      id: 'vco-1-pwm',
+      id: "vco-1-pwm",
       type: IN,
     },
     {
-      id: 'vca',
+      id: "vca",
       type: OUT,
     },
     {
-      id: 'vco-1',
+      id: "vco-1",
       type: OUT,
     },
     {
-      id: 'vco-1-sub',
+      id: "vco-1-sub",
       type: OUT,
     },
     {
-      id: 'vco-1-sub-2',
+      id: "vco-1-sub-2",
       type: OUT,
     },
     {
-      id: 'vca',
+      id: "vca",
       type: IN,
     },
     {
-      id: 'vco-2',
+      id: "vco-2",
       type: IN,
     },
     {
-      id: 'vco-2-sub',
+      id: "vco-2-sub",
       type: IN,
     },
     {
-      id: 'vco-2-pwm',
+      id: "vco-2-pwm",
       type: IN,
     },
     {
-      id: 'vca-eg',
+      id: "vca-eg",
       type: OUT,
     },
     {
-      id: 'vco-2',
+      id: "vco-2",
       type: OUT,
     },
     {
-      id: 'vco-2-sub-1',
+      id: "vco-2-sub-1",
       type: OUT,
     },
     {
-      id: 'vco-2-sub-2',
+      id: "vco-2-sub-2",
       type: OUT,
     },
     {
-      id: 'cutoff',
+      id: "cutoff",
       type: IN,
     },
     {
-      id: 'play',
+      id: "play",
       type: IN,
     },
     {
-      id: 'reset',
+      id: "reset",
       type: IN,
     },
     {
-      id: 'trigger',
+      id: "trigger",
       type: IN,
     },
     {
-      id: 'vcf-eg',
+      id: "vcf-eg",
       type: OUT,
     },
     {
-      id: 'rhythm-1',
+      id: "rhythm-1",
       type: IN,
     },
     {
-      id: 'rhythm-2',
+      id: "rhythm-2",
       type: IN,
     },
     {
-      id: 'rhythm-3',
+      id: "rhythm-3",
       type: IN,
     },
     {
-      id: 'rhythm-4',
+      id: "rhythm-4",
       type: IN,
     },
     {
-      id: 'seq-1',
+      id: "seq-1",
       type: OUT,
     },
     {
-      id: 'seq-1-clk',
+      id: "seq-1-clk",
       type: OUT,
     },
     {
-      id: 'seq-2',
+      id: "seq-2",
       type: OUT,
     },
     {
-      id: 'seq-2-clk',
+      id: "seq-2-clk",
       type: OUT,
     },
     {
-      id: 'midi-in',
+      id: "midi-in",
       type: IN,
     },
     {
-      id: 'clock',
+      id: "clock",
       type: IN,
     },
     {
-      id: 'clock',
+      id: "clock",
       type: OUT,
     },
     {
-      id: 'trigger',
+      id: "trigger",
       type: OUT,
     },
   ],

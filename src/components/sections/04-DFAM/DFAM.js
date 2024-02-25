@@ -2,12 +2,13 @@ import "./DFAM.css";
 import { Knob, Toggle } from "../../controls";
 import { usePatch } from "../../../state/Context";
 import { DT, SYNTH_SECTION_HEIGHT, TT } from "../../../constants";
+import { DFAM as DFAM_ID } from "../../../constants";
 
 const DFAM = ({ dragHandleProps }) => {
   const patch = usePatch();
 
   const {
-    dfam: {
+    [DFAM_ID]: {
       VCODecay: { angle },
     },
   } = patch;

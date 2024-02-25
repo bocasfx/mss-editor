@@ -42,7 +42,6 @@ const PatchBay = ({ synths }) => {
   const calculatePatchCord = useCallback(
     (center) => {
       if (patchCord.current && dragging) {
-        console.log("calculatePatchCord");
         const { nodes, sim } = patchCord.current.datum();
         const start = nodes[0];
         const end = nodes[nodes.length - 1];
@@ -156,7 +155,7 @@ const PatchBay = ({ synths }) => {
   }, []);
 
   const renderJacks = useCallback(
-    (id, count) => {
+    (id) => {
       return jackData[id].map((jack, idx) => {
         const { type } = jack;
         return (
@@ -175,7 +174,7 @@ const PatchBay = ({ synths }) => {
 
   const renderSections = useCallback(() => {
     return synths.map((synth, index) => {
-      const { id, patchBayJackCount } = synth;
+      const { id } = synth;
       return (
         <div
           key={id}
@@ -184,7 +183,7 @@ const PatchBay = ({ synths }) => {
             top: `${index * SYNTH_SECTION_HEIGHT}px`,
           }}
         >
-          {renderJacks(id, patchBayJackCount)}
+          {renderJacks(id)}
         </div>
       );
     });
