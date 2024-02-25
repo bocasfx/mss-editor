@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import "./PatchBay.css";
 import { Jack } from "../../controls";
 import { transformCoords } from "../../../utils";
-import { IN, OUT, CLEAR, SYNTH_SECTION_HEIGHT } from "../../../constants";
+import { CLEAR, SYNTH_SECTION_HEIGHT } from "../../../constants";
 import { usePatchDispatch } from "../../../state/Context";
 import * as d3 from "d3";
 import {
@@ -12,6 +12,7 @@ import {
   FORCE_COLLIDE,
   FORCE_LINK_STRENGTH,
 } from "../../../constants";
+import { jackData } from "../../../data";
 
 const PatchBay = ({ synths }) => {
   const dispatch = usePatchDispatch();
@@ -35,10 +36,11 @@ const PatchBay = ({ synths }) => {
     dispatch({
       type: CLEAR,
     });
-  }, [dispatch, synths]);
+  }, [dispatch]);
 
   const onMouseDown = useCallback(
-    (event) => {
+    (event, type) => {
+      console.log(type);
       event.stopPropagation();
       const svg = d3.select(svgRef.current);
       let _cable = svg
@@ -64,7 +66,7 @@ const PatchBay = ({ synths }) => {
       nodes[0].fy = y;
       nodes[nodes.length - 1].fx = x;
       nodes[nodes.length - 1].fy = y;
-      setCurrentCoord({ x1: x, y1: y });
+      setCurrentCoord({ x1: x, y1: y, type });
 
       // use a force simulation to simulate the cable
       const sim = d3
@@ -84,12 +86,15 @@ const PatchBay = ({ synths }) => {
   );
 
   const onMouseUp = useCallback(
-    (event) => {
+    (event, type) => {
       event.stopPropagation();
       const { x, y } = transformCoords(svgRef, event.clientX, event.clientY);
 
-      if (x === currentCoord.x1 && y === currentCoord.y1) {
-        console.log("same position");
+      if (
+        (x === currentCoord.x1 && y === currentCoord.y1) ||
+        type === currentCoord.type
+      ) {
+        console.log("nope");
         cable.current.remove();
       } else {
         const { x1, y1 } = currentCoord;
@@ -124,7 +129,7 @@ const PatchBay = ({ synths }) => {
     }
   }, []);
 
-  const onContainerMouseUp = useCallback((event) => {
+  const containerMouseHandler = useCallback((event) => {
     event.stopPropagation();
     if (cable.current) {
       cable.current.remove();
@@ -132,20 +137,20 @@ const PatchBay = ({ synths }) => {
   }, []);
 
   const renderJacks = useCallback(
-    (count) => {
-      const jacks = [];
-      for (let i = 0; i < count; i++) {
-        const type = i % 2 === 0 ? IN : OUT;
-        jacks.push(
+    (id, count) => {
+      console.log(id)
+      return jackData[id].map((jack, idx) => {
+        const { type } = jack;
+        return (
           <Jack
+            id={id}
             type={type}
-            key={i}
+            key={idx}
             onMouseDown={onMouseDown}
             onMouseUp={onMouseUp}
           />
         );
-      }
-      return jacks;
+      });
     },
     [onMouseDown, onMouseUp]
   );
@@ -161,7 +166,7 @@ const PatchBay = ({ synths }) => {
             top: `${index * SYNTH_SECTION_HEIGHT}px`,
           }}
         >
-          {renderJacks(patchBayJackCount)}
+          {renderJacks(id, patchBayJackCount)}
         </div>
       );
     });
@@ -171,7 +176,8 @@ const PatchBay = ({ synths }) => {
     <div
       className="patch-bay-container"
       onMouseMove={onMouseMove}
-      onMouseUp={onContainerMouseUp}
+      onMouseUp={containerMouseHandler}
+      onMouseLeave={containerMouseHandler}
     >
       <div className="svg-container">
         {renderSections()}

@@ -13,7 +13,7 @@ import {
 } from "./components";
 import { PatchProvider } from "./state/Context";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import { synthData } from "./data/synths";
+import { synthData } from "./data";
 
 function App() {
   const [synths, setSynths] = useState(synthData);
@@ -39,7 +39,7 @@ function App() {
               {synths.map((_synth, index) => {
                 return (
                   <Draggable
-                    draggableId={`comment-${_synth.id}`}
+                    draggableId={`synth-${_synth.id}`}
                     index={index}
                     key={_synth.id}
                   >
