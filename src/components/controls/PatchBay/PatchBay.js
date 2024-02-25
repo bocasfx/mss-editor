@@ -18,10 +18,13 @@ const PatchBay = () => {
   const dispatch = usePatchDispatch();
   const svgRef = useRef(null);
   const patchCord = useRef(null);
+  const plug1 = useRef(null);
+  const plug2 = useRef(null);
   const patchCordCount = useRef(0);
   const [coords, setCoords] = useState([]);
   const [dragging, setDragging] = useState(false);
   const [currentCoord, setCurrentCoord] = useState({});
+  const [patchColor, setPatchColor] = useState(d3.schemeCategory10[0]);
   const patch = usePatch();
   const { sectionOrder } = patch;
 
@@ -72,9 +75,12 @@ const PatchBay = () => {
       event.stopPropagation();
       const svg = d3.select(svgRef.current);
 
+      const _patchColor = d3.schemeCategory10[patchCordCount.current % 10];
+      setPatchColor(_patchColor);
+
       let _patchCord = svg
         .append("path")
-        .attr("stroke", d3.schemeCategory10[patchCordCount.current % 10])
+        .attr("stroke", _patchColor)
         .attr("stroke-width", 5)
         .attr("fill", "none")
         .attr("stroke-linecap", "round")
@@ -98,6 +104,14 @@ const PatchBay = () => {
       nodes[nodes.length - 1].fy = y;
       setCurrentCoord({ x1: x, y1: y, type });
 
+      plug1.current = svg
+        .append("circle")
+        .attr("cx", x)
+        .attr("cy", y)
+        .attr("r", 6)
+        .attr("stroke", "none")
+        .attr("fill", _patchColor);
+
       // use a force simulation to simulate the patchCord
       const sim = d3
         .forceSimulation(nodes)
@@ -110,7 +124,6 @@ const PatchBay = () => {
 
       // each patchCord has its own nodes and simulation
       patchCord.current.datum({ nodes, sim });
-      patchCordCount.current += 1;
 
       setDragging(true);
     },
@@ -135,26 +148,50 @@ const PatchBay = () => {
         (x === currentCoord.x1 && y === currentCoord.y1) ||
         type === currentCoord.type
       ) {
-        patchCord.current.remove();
+        removeRefs();
       } else {
         calculatePatchCord(center);
 
+        const svg = d3.select(svgRef.current);
+
+        plug2.current = svg
+          .append("circle")
+          .attr("cx", x)
+          .attr("cy", y)
+          .attr("r", 6)
+          .attr("stroke", "none")
+          .attr("fill", patchColor);
+
         const { x1, y1 } = currentCoord;
         setCoords([...coords, { x1, y1, x2: x, y2: y }]);
+
         patchCord.current = undefined;
+        plug1.current = undefined;
+        plug2.current = undefined;
 
         setDragging(false);
+        patchCordCount.current += 1;
       }
     },
-    [calculatePatchCord, coords, currentCoord]
+    [calculatePatchCord, coords, currentCoord, patchColor]
   );
 
   const containerMouseHandler = useCallback((event) => {
     event.stopPropagation();
+    removeRefs();
+  }, []);
+
+  const removeRefs = () => {
     if (patchCord.current) {
       patchCord.current.remove();
     }
-  }, []);
+    if (plug1.current) {
+      plug1.current.remove();
+    }
+    if (plug2.current) {
+      plug2.current.remove();
+    }
+  };
 
   const renderJacks = useCallback(
     (id) => {
