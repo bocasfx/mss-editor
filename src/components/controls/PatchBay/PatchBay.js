@@ -21,7 +21,7 @@ const PatchBay = () => {
   const plug1 = useRef(null);
   const plug2 = useRef(null);
   const patchCordCount = useRef(0);
-  const [coords, setCoords] = useState([]);
+
   const [dragging, setDragging] = useState(false);
   const [currentCoord, setCurrentCoord] = useState({});
   const [patchColor, setPatchColor] = useState(d3.schemeCategory10[0]);
@@ -104,13 +104,7 @@ const PatchBay = () => {
       nodes[nodes.length - 1].fy = y;
       setCurrentCoord({ x1: x, y1: y, type });
 
-      plug1.current = svg
-        .append("circle")
-        .attr("cx", x)
-        .attr("cy", y)
-        .attr("r", 6)
-        .attr("stroke", "none")
-        .attr("fill", _patchColor);
+      plug1.current = getPlug(x, y, _patchColor);
 
       // use a force simulation to simulate the patchCord
       const sim = d3
@@ -152,28 +146,18 @@ const PatchBay = () => {
       } else {
         calculatePatchCord(center);
 
-        const svg = d3.select(svgRef.current);
-
-        plug2.current = svg
-          .append("circle")
-          .attr("cx", x)
-          .attr("cy", y)
-          .attr("r", 6)
-          .attr("stroke", "none")
-          .attr("fill", patchColor);
-
-        const { x1, y1 } = currentCoord;
-        setCoords([...coords, { x1, y1, x2: x, y2: y }]);
+        plug2.current = getPlug(x, y, patchColor);
 
         patchCord.current = undefined;
         plug1.current = undefined;
         plug2.current = undefined;
 
-        setDragging(false);
         patchCordCount.current += 1;
+
+        setDragging(false);
       }
     },
-    [calculatePatchCord, coords, currentCoord, patchColor]
+    [calculatePatchCord, currentCoord, patchColor]
   );
 
   const containerMouseHandler = useCallback((event) => {
@@ -191,6 +175,17 @@ const PatchBay = () => {
     if (plug2.current) {
       plug2.current.remove();
     }
+  };
+
+  const getPlug = (x, y, _patchColor) => {
+    const svg = d3.select(svgRef.current);
+    svg
+      .append("circle")
+      .attr("cx", x)
+      .attr("cy", y)
+      .attr("r", 6)
+      .attr("stroke", "none")
+      .attr("fill", _patchColor);
   };
 
   const renderJacks = useCallback(
