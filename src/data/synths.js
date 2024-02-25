@@ -1,4 +1,4 @@
-const SYNTHS = [
+const synthData = [
   {
     id: "DFAM",
     patchBayJackCount: 24,
@@ -13,4 +13,4 @@ const SYNTHS = [
   },
 ];
 
-export { SYNTHS };
+export { synthData };

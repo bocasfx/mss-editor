@@ -13,10 +13,10 @@ import {
 } from "./components";
 import { PatchProvider } from "./state/Context";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import { SYNTHS } from "./data/synths";
+import { synthData } from "./data/synths";
 
 function App() {
-  const [synths, setSynths] = useState(SYNTHS);
+  const [synths, setSynths] = useState(synthData);
 
   const dragEnded = (param) => {
     const { source, destination } = param;
