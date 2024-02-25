@@ -1,4 +1,4 @@
-const CABLE_SEGMENTS = 4;
+const CABLE_SEGMENTS = 10;
 const FORCE_Y = 2000;
 const FORCE_Y_STRENGTH = 0.005;
 const FORCE_COLLIDE = 20;

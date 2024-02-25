@@ -20,6 +20,7 @@ const PatchBay = ({ synths }) => {
   const cable = useRef(null);
   const cableCount = useRef(0);
   const [coords, setCoords] = useState([]);
+  const [dragging, setDragging] = useState(false);
   const [currentCoord, setCurrentCoord] = useState({});
 
   const simulationNodeDrawer = useMemo(
@@ -38,16 +39,44 @@ const PatchBay = ({ synths }) => {
     });
   }, [dispatch]);
 
+  const calculatePatchCord = useCallback(
+    (center) => {
+      if (cable.current && dragging) {
+        console.log("calculatePatchCord");
+        const { nodes, sim } = cable.current.datum();
+        const start = nodes[0];
+        const end = nodes[nodes.length - 1];
+
+        const { x, y } = transformCoords(svgRef, center.x, center.y);
+        // set new position of the end of the cable
+        end.fx = x;
+        end.fy = y;
+
+        // measure distance
+        const distance = Math.sqrt(
+          Math.pow(end.fx - start.fx, 2) + Math.pow(end.fy - start.fy, 2)
+        );
+
+        // set the link distance
+        sim.force("links").distance(distance / CABLE_SEGMENTS);
+        sim.alpha(1);
+        sim.restart();
+      }
+    },
+    [dragging]
+  );
+
   const onMouseDown = useCallback(
-    (event, type) => {
-      console.log(type);
+    (event, type, center) => {
       event.stopPropagation();
       const svg = d3.select(svgRef.current);
+
       let _cable = svg
         .append("path")
         .attr("stroke", d3.schemeCategory10[cableCount.current % 10])
         .attr("stroke-width", 5)
         .attr("fill", "none")
+        .attr("stroke-linecap", "round")
         .attr("id", `cable-${cableCount.current}`);
 
       cable.current = _cable;
@@ -61,7 +90,7 @@ const PatchBay = ({ synths }) => {
         .map(([source, target]) => ({ source, target }));
 
       // fix the position of the first node where you clicked
-      const { x, y } = transformCoords(svgRef, event.clientX, event.clientY);
+      const { x, y } = transformCoords(svgRef, center.x, center.y);
       nodes[0].fx = x;
       nodes[0].fy = y;
       nodes[nodes.length - 1].fx = x;
@@ -81,53 +110,43 @@ const PatchBay = ({ synths }) => {
       // each cable has its own nodes and simulation
       cable.current.datum({ nodes, sim });
       cableCount.current += 1;
+
+      setDragging(true);
     },
     [simulationNodeDrawer]
   );
 
-  const onMouseUp = useCallback(
-    (event, type) => {
+  const onMouseMove = useCallback(
+    (event) => {
       event.stopPropagation();
-      const { x, y } = transformCoords(svgRef, event.clientX, event.clientY);
+      calculatePatchCord({ x: event.clientX, y: event.clientY });
+    },
+    [calculatePatchCord]
+  );
+
+  const onMouseUp = useCallback(
+    (event, type, center) => {
+      event.stopPropagation();
+
+      const { x, y } = transformCoords(svgRef, center.x, center.y);
 
       if (
         (x === currentCoord.x1 && y === currentCoord.y1) ||
         type === currentCoord.type
       ) {
-        console.log("nope");
         cable.current.remove();
       } else {
+        calculatePatchCord(center);
+
         const { x1, y1 } = currentCoord;
         setCoords([...coords, { x1, y1, x2: x, y2: y }]);
         cable.current = undefined;
+
+        setDragging(false);
       }
     },
-    [coords, currentCoord]
+    [calculatePatchCord, coords, currentCoord]
   );
-
-  const onMouseMove = useCallback((event) => {
-    event.stopPropagation();
-    if (cable.current) {
-      const { nodes, sim } = cable.current.datum();
-      const start = nodes[0];
-      const end = nodes[nodes.length - 1];
-
-      const { x, y } = transformCoords(svgRef, event.clientX, event.clientY);
-      // set new position of the end of the cable
-      end.fx = x;
-      end.fy = y;
-
-      // measure distance
-      const distance = Math.sqrt(
-        Math.pow(end.fx - start.fx, 2) + Math.pow(end.fy - start.fy, 2)
-      );
-
-      // set the link distance
-      sim.force("links").distance(distance / CABLE_SEGMENTS);
-      sim.alpha(1);
-      sim.restart();
-    }
-  }, []);
 
   const containerMouseHandler = useCallback((event) => {
     event.stopPropagation();
@@ -138,7 +157,6 @@ const PatchBay = ({ synths }) => {
 
   const renderJacks = useCallback(
     (id, count) => {
-      console.log(id)
       return jackData[id].map((jack, idx) => {
         const { type } = jack;
         return (
