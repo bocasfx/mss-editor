@@ -3,7 +3,7 @@ import "./PatchBay.css";
 import { Jack } from "../../controls";
 import { transformCoords } from "../../../utils";
 import { CLEAR, SYNTH_SECTION_HEIGHT } from "../../../constants";
-import { usePatchDispatch } from "../../../state/Context";
+import { usePatch, usePatchDispatch } from "../../../state/Context";
 import * as d3 from "d3";
 import {
   FORCE_Y,
@@ -14,7 +14,7 @@ import {
 } from "../../../constants";
 import { jackData } from "../../../data";
 
-const PatchBay = ({ synths }) => {
+const PatchBay = () => {
   const dispatch = usePatchDispatch();
   const svgRef = useRef(null);
   const patchCord = useRef(null);
@@ -22,6 +22,8 @@ const PatchBay = ({ synths }) => {
   const [coords, setCoords] = useState([]);
   const [dragging, setDragging] = useState(false);
   const [currentCoord, setCurrentCoord] = useState({});
+  const patch = usePatch();
+  const { sectionOrder } = patch;
 
   const simulationNodeDrawer = useMemo(
     () =>
@@ -173,7 +175,7 @@ const PatchBay = ({ synths }) => {
   );
 
   const renderSections = useCallback(() => {
-    return synths.map((synth, index) => {
+    return sectionOrder.map((synth, index) => {
       const { id } = synth;
       return (
         <div
@@ -187,7 +189,7 @@ const PatchBay = ({ synths }) => {
         </div>
       );
     });
-  }, [renderJacks, synths]);
+  }, [renderJacks, sectionOrder]);
 
   return (
     <div

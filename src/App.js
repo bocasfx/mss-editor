@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import "./App.css";
 import {
   DownloadPatch,
@@ -11,23 +10,25 @@ import {
   SynthList,
   PatchBay,
 } from "./components";
-import { PatchProvider } from "./state/Context";
+import { usePatch, usePatchDispatch } from "./state/Context";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import { synthData } from "./data";
 
 function App() {
-  const [synths, setSynths] = useState(synthData);
+  const patch = usePatch();
+  const dispatch = usePatchDispatch();
+
+  const { sectionOrder } = patch;
 
   const dragEnded = (param) => {
     const { source, destination } = param;
-    let _arr = [...synths];
+    let _arr = [...sectionOrder];
 
     // Extracting the source item from the list
     const _item = _arr.splice(source.index, 1)[0];
 
     // Inserting it at the destination index.
     _arr.splice(destination.index, 0, _item);
-    setSynths(_arr);
+    dispatch({ type: "REORDER", payload: _arr });
   };
 
   const renderSynths = () => {
@@ -36,7 +37,7 @@ function App() {
         <Droppable droppableId="synths-wrapper">
           {(provided, snapshot) => (
             <SynthList ref={provided.innerRef} {...provided.droppableProps}>
-              {synths.map((_synth, index) => {
+              {sectionOrder.map((_synth, index) => {
                 return (
                   <Draggable
                     draggableId={`synth-${_synth.id}`}
@@ -64,22 +65,20 @@ function App() {
   };
 
   return (
-    <PatchProvider>
-      <div className="App">
-        <DownloadPatch />
-        <OpenPatch />
-        {/* <React.StrictMode> */}
-        <div className="mss-container">
-          <Header />
-          <Sequencer />
-          <Divider />
-          {renderSynths()}
-          <Footer />
-          <PatchBay synths={synths} />
-        </div>
-        {/* </React.StrictMode> */}
+    <div className="App">
+      <DownloadPatch />
+      <OpenPatch />
+      {/* <React.StrictMode> */}
+      <div className="mss-container">
+        <Header />
+        <Sequencer />
+        <Divider />
+        {renderSynths()}
+        <Footer />
+        <PatchBay />
       </div>
-    </PatchProvider>
+      {/* </React.StrictMode> */}
+    </div>
   );
 }
 

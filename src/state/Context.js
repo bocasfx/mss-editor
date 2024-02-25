@@ -1,7 +1,7 @@
 import { createContext, useContext, useReducer } from "react";
 import { saveFile } from "../utils/file";
 import { initialState } from "./initialState";
-import { CLEAR, DOWNLOAD, OPEN, UPDATE } from "../constants/actions";
+import { CLEAR, DOWNLOAD, OPEN, REORDER, UPDATE } from "../constants/actions";
 
 const Context = createContext(null);
 const DispatchContext = createContext(null);
@@ -17,7 +17,7 @@ const handleUpdate = (patch, action) => {
   const [section, element] = id.split(".");
   newPatch[section] = { ...newPatch[section], [element]: value };
   return newPatch;
-}
+};
 
 const patchReducer = (patch, action) => {
   switch (action.type) {
@@ -26,13 +26,16 @@ const patchReducer = (patch, action) => {
     }
     case OPEN: {
       const { patch: newPatch } = action;
-      return { ...JSON.parse(newPatch) }
+      return { ...JSON.parse(newPatch) };
     }
     case UPDATE: {
       return handleUpdate(patch, action);
     }
     case CLEAR: {
       return { ...initialState };
+    }
+    case REORDER: {
+      return { ...patch, sectionOrder: action.payload };
     }
     default: {
       throw Error("Unknown action: " + action.type);
