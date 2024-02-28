@@ -21,10 +21,16 @@ const DFAM = ({ dragHandleProps }) => {
         left={126}
         size={80}
         type="dot"
-        id="dfam.VCODecay"
+        id={`${DFAM_ID}.VCODecay`}
         loadedAngle={angle}
       />
-      <Knob top={280} left={349} size={30} type="line" id="dfam.seq-pitch0" />
+      <Knob
+        top={280}
+        left={349}
+        size={30}
+        type="line"
+        id={`${DFAM_ID}.seq-pitch0`}
+      />
       <Toggle left={223} top={192} type={DT} />
       <Toggle left={222} top={87} type={TT} />
     </div>

@@ -55,7 +55,7 @@ const Knob = ({ top, left, size, type, id, loadedAngle }) => {
       document.exitPointerLock();
       dispatch({
         type: UPDATE,
-        id: id,
+        id,
         value: { value, angle },
       });
     },
