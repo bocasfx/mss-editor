@@ -170,20 +170,14 @@ const PatchBay = () => {
   }, []);
 
   const removeRefs = () => {
-    if (patchCord.current) {
-      patchCord.current.remove();
-    }
-    if (plug1.current) {
-      plug1.current.remove();
-    }
-    if (plug2.current) {
-      plug2.current.remove();
-    }
+    patchCord?.current?.remove();
+    plug1?.current?.remove();
+    plug2?.current?.remove();
   };
 
   const getPlug = (x, y, _patchColor) => {
-    const svg = d3.select(svgRef.current);
-    svg
+    return d3
+      .select(svgRef.current)
       .append("circle")
       .attr("cx", x)
       .attr("cy", y)
