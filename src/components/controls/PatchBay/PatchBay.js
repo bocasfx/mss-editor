@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import "./PatchBay.css";
 import { Jack } from "../../controls";
 import { transformCoords } from "../../../utils";
-import { CLEAR, SYNTH_SECTION_HEIGHT } from "../../../constants";
-import { usePatch, usePatchDispatch } from "../../../state/Context";
+import { SYNTH_SECTION_HEIGHT } from "../../../constants";
+import { usePatch } from "../../../state/Context";
 import * as d3 from "d3";
 import {
   FORCE_Y,
@@ -14,8 +14,13 @@ import {
 } from "../../../constants";
 import { jackData } from "../../../data";
 
+const simulationNodeDrawer = d3
+  .line()
+  .x((d) => d.x)
+  .y((d) => d.y)
+  .curve(d3.curveBasis);
+
 const PatchBay = () => {
-  const dispatch = usePatchDispatch();
   const svgRef = useRef(null);
   const patchCord = useRef(null);
   const plug1 = useRef(null);
@@ -28,23 +33,55 @@ const PatchBay = () => {
   const patch = usePatch();
   const { sectionOrder } = patch;
 
-  const simulationNodeDrawer = useMemo(
-    () =>
-      d3
-        .line()
-        .x((d) => d.x)
-        .y((d) => d.y)
-        .curve(d3.curveBasis),
-    []
-  );
+  const initializePatchCord = useCallback((center, type) => {
+    const svg = d3.select(svgRef.current);
 
-  useEffect(() => {
-    dispatch({
-      type: CLEAR,
-    });
-  }, [dispatch]);
+    const _patchColor = d3.schemeCategory10[patchCordCount.current % 10];
+    setPatchColor(_patchColor);
 
-  const calculatePatchCord = useCallback(
+    let _patchCord = svg
+      .append("path")
+      .attr("stroke", _patchColor)
+      .attr("stroke-width", 5)
+      .attr("fill", "none")
+      .attr("stroke-linecap", "round")
+      .attr("id", `patchCord-${patchCordCount.current}`);
+
+    patchCord.current = _patchCord;
+
+    // Create the nodes
+    const nodes = d3.range(PATCH_CORD_SEGMENTS).map(() => ({}));
+
+    // Link the nodes
+    const links = d3
+      .pairs(nodes)
+      .map(([source, target]) => ({ source, target }));
+
+    // fix the position of the first node where you clicked
+    const { x, y } = transformCoords(svgRef, center.x, center.y);
+    nodes[0].fx = x;
+    nodes[0].fy = y;
+    nodes[nodes.length - 1].fx = x;
+    nodes[nodes.length - 1].fy = y;
+    setCurrentCoord({ x1: x, y1: y, type });
+
+    plug1.current = getPlug(x, y, _patchColor);
+
+    // use a force simulation to simulate the patchCord
+    const sim = d3
+      .forceSimulation(nodes)
+      .force("gravity", d3.forceY(FORCE_Y).strength(FORCE_Y_STRENGTH)) // simulate gravity
+      .force("collide", d3.forceCollide(FORCE_COLLIDE)) // simulate patchCord auto disentanglement (patchCord nodes will push each other away)
+      .force("links", d3.forceLink(links).strength(FORCE_LINK_STRENGTH)) // string the patchCords nodes together
+      .on("tick", () =>
+        _patchCord.attr("d", (d) => simulationNodeDrawer(d.nodes))
+      ); // draw the path on each simulation tick
+
+    // each patchCord has its own nodes and simulation
+    patchCord.current.datum({ nodes, sim });
+  }, []);
+
+  const animatePatchCoord = useCallback(
     (center) => {
       if (patchCord.current && dragging) {
         const { nodes, sim } = patchCord.current.datum();
@@ -70,66 +107,34 @@ const PatchBay = () => {
     [dragging]
   );
 
+  const finalizePatchCord = useCallback(
+    (x, y) => {
+      plug2.current = getPlug(x, y, patchColor);
+
+      patchCord.current = undefined;
+      plug1.current = undefined;
+      plug2.current = undefined;
+
+      patchCordCount.current += 1;
+    },
+    [patchColor]
+  );
+
   const onMouseDown = useCallback(
     (event, type, center) => {
       event.stopPropagation();
-      const svg = d3.select(svgRef.current);
-
-      const _patchColor = d3.schemeCategory10[patchCordCount.current % 10];
-      setPatchColor(_patchColor);
-
-      let _patchCord = svg
-        .append("path")
-        .attr("stroke", _patchColor)
-        .attr("stroke-width", 5)
-        .attr("fill", "none")
-        .attr("stroke-linecap", "round")
-        .attr("id", `patchCord-${patchCordCount.current}`);
-
-      patchCord.current = _patchCord;
-
-      // Create the nodes
-      const nodes = d3.range(PATCH_CORD_SEGMENTS).map(() => ({}));
-
-      // Link the nodes
-      const links = d3
-        .pairs(nodes)
-        .map(([source, target]) => ({ source, target }));
-
-      // fix the position of the first node where you clicked
-      const { x, y } = transformCoords(svgRef, center.x, center.y);
-      nodes[0].fx = x;
-      nodes[0].fy = y;
-      nodes[nodes.length - 1].fx = x;
-      nodes[nodes.length - 1].fy = y;
-      setCurrentCoord({ x1: x, y1: y, type });
-
-      plug1.current = getPlug(x, y, _patchColor);
-
-      // use a force simulation to simulate the patchCord
-      const sim = d3
-        .forceSimulation(nodes)
-        .force("gravity", d3.forceY(FORCE_Y).strength(FORCE_Y_STRENGTH)) // simulate gravity
-        .force("collide", d3.forceCollide(FORCE_COLLIDE)) // simulate patchCord auto disentanglement (patchCord nodes will push each other away)
-        .force("links", d3.forceLink(links).strength(FORCE_LINK_STRENGTH)) // string the patchCords nodes together
-        .on("tick", () =>
-          _patchCord.attr("d", (d) => simulationNodeDrawer(d.nodes))
-        ); // draw the path on each simulation tick
-
-      // each patchCord has its own nodes and simulation
-      patchCord.current.datum({ nodes, sim });
-
+      initializePatchCord(center, type);
       setDragging(true);
     },
-    [simulationNodeDrawer]
+    [initializePatchCord]
   );
 
   const onMouseMove = useCallback(
     (event) => {
       event.stopPropagation();
-      calculatePatchCord({ x: event.clientX, y: event.clientY });
+      animatePatchCoord({ x: event.clientX, y: event.clientY });
     },
-    [calculatePatchCord]
+    [animatePatchCoord]
   );
 
   const onMouseUp = useCallback(
@@ -144,20 +149,19 @@ const PatchBay = () => {
       ) {
         removeRefs();
       } else {
-        calculatePatchCord(center);
-
-        plug2.current = getPlug(x, y, patchColor);
-
-        patchCord.current = undefined;
-        plug1.current = undefined;
-        plug2.current = undefined;
-
-        patchCordCount.current += 1;
+        animatePatchCoord(center);
+        finalizePatchCord(x, y);
 
         setDragging(false);
       }
     },
-    [calculatePatchCord, currentCoord, patchColor]
+    [
+      animatePatchCoord,
+      currentCoord.type,
+      currentCoord.x1,
+      currentCoord.y1,
+      finalizePatchCord,
+    ]
   );
 
   const containerMouseHandler = useCallback((event) => {

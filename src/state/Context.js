@@ -11,6 +11,7 @@ const handleDownload = (patch) => {
   return { ...patch };
 };
 
+// TODO: Not saving the patch correctly
 const handleUpdate = (patch, action) => {
   const { id, value } = action;
   const newPatch = { ...patch };
